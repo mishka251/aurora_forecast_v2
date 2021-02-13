@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>GEOTEST</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+.esri-view-width-xlarge .esri-popup__main-container,
+.esri-view-width-large .esri-popup__main-container,
+.esri-view-width-medium .esri-popup__main-container
+{
+    width: 103px !important;
+    height: 50px !important;
+}
+div.esriPopupWrapper .zoomTo {
+  display: none;
+}
+.esri-icon-close,
+.esri-popup__navigation,
+.esri-popup__header-buttons,
+.esri-widget__heading,
+.esri-legend__layer-body
+{
+    display: none !important;
+}
+.esri-widget,
+.esri-popup__header-title{
+    font-size: 10px !important;
+    padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;
+
+}
+.esri-legend__service,
+.esri-ui-corner{
+     padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;   
+        width: 50px !important;
+}
+.esri-legend__ramp-label{
+    font-size: 10px !important;     
+    padding: 0 0 0 0 !important;
+    margin: 0 0 0 0 !important;   
+}
+.esri-ui-corner .esri-expand .esri-widget--panel, .esri-ui-corner .esri-expand .esri-widget--panel-height-only, .esri-ui-corner .esri-component>.esri-widget--panel, .esri-ui-corner .esri-component.esri-widget--panel
+{
+  width: 60px !important;  
+  background-color:#888888;font-size: 10px !important;
+}
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.16/"></script>
+    <script>
+    window.onload = function(){
+    //document.getElementsByClassName('.esri-legend__layer-table .esri-legend__layer-table--size-ramp')[0].style.display = 'none';
+}
+    const url =  "http://gimslaw8.bget.ru/static/files/aurora_ext.csv";
+      require(["esri/Map", "esri/views/SceneView","esri/layers/CSVLayer","esri/layers/GeoJSONLayer","esri/renderers/UniqueValueRenderer","esri/widgets/Legend"], function(Map, SceneView, CSVLayer, GeoJSONLayer, UniqueValueRenderer,Legend) {
+        const template = {
+          title: "",
+          content: "Intensivity {category} latitude {latitude} longitude {longitude}."
+        };
+                const map = new Map({
+            basemap: "gray-vector",
+            ground: "world-elevation",
+            maxZoom: 5,
+            effectiveMaxZoom:5,
+            effectiveMinZoom:5,
+            minZoom: 5,
+            maxScale: 5000000
+        });
+
+var renderer = {
+  type: "unique-value",  // autocasts as new UniqueValueRenderer()
+//  field: "title",
+  defaultSymbol: { type: "simple-line" },   // autocasts as new SimpleFillSymbol()
+  outline: {
+    width: 10
+  },
+    visualVariables: [
+    {
+      type: "color", // indicates this is a color visual variable
+      field: "title", // total population in poverty
+      width: "2px",
+        legendOptions: {
+    title: "Probability"
+  },
+      stops: [
+        {
+          value: 10, // features where < 10% of the pop in poverty
+          color: "#0302FC", // will be assiged this color (beige)
+          label: "0", // label to display in the legend
+          size: 10
+        },
+        {
+          value: 20, // features where < 10% of the pop in poverty
+          color: "#63009E", // will be assiged this color (beige)
+          size: 10
+          //label: "> 10% and < 20%" // label to display in the legend
+        },  
+        {
+          value: 40, // features where < 10% of the pop in poverty
+          color: "#A1015D", // will be assiged this color (beige)
+        size: 10
+        //  label: "> 20% and < 40%" // label to display in the legend
+        },        
+        {
+          value: 70, // features where > 30% of the pop in poverty
+          color: "#D80027", // will be assigned this color (purple)
+         size: 10
+         // label: "> 40% and < 70%" // label to display in the legend
+        },
+        {
+          value: 90, // features where > 30% of the pop in poverty
+          color: "#FE0002", // will be assigned this color (purple)
+          label: " 100", // label to display in the legend
+          size: 10
+        }        
+      ]
+
+    }
+  ]
+};
+
+var popupTemplate = {
+  title: "Aurora Probability",
+  content:
+    "{title}"
+};
+        
+        const geoJSONLayer = new GeoJSONLayer({
+           url: "http://gimslaw8.bget.ru/test",
+           popupEnabled: true,
+           outFields: ["title"],
+           popupTemplate: popupTemplate,
+           renderer: renderer,
+                     highlightOptions: {
+    //color: [255, 255, 0, 1],
+  //  haloColor: "red",
+    haloOpacity: 0.9,
+    fillOpacity: 0.2
+          },
+           //
+        });
+        map.add(geoJSONLayer);
+                
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          scale: 60000000,
+          minScale:30000000,
+          center: [-101.17, 21.78],
+          qualityProfile: "high",
+          alphaCompositingEnabled: true,
+  highlightOptions: {
+
+  },
+           environment: {
+     lighting: {
+    date: new Date(),  // sets the lighting to reflect the current time of day
+    directShadowsEnabled: true,  // enables shadows
+    cameraTrackingEnabled: false
+  },
+   starsEnabled: true,
+   atmosphereEnabled: true,
+            atmosphere: {
+              quality: "high"
+            },
+   ambientOcclusionEnabled: true
+ },
+          constraints: {
+            altitude: {
+              min: 7000000
+            }
+          },
+        });
+        
+                  var legend = new Legend({
+            view: view,
+            title: "Aurora Probability",
+            layerInfos: [
+              {
+                layer: geoJSONLayer
+              }
+            ]
+          });
+          view.ui.add(legend, "top-right");
+        view.popup.dockOptions.buttonEnabled = false;  
+        view.popup.viewModel.actions = [];
+        console.log(typeof(geoJSONLayer));
+view.whenLayerView(geoJSONLayer)
+    .then(function(layerView) {
+      //layerView.highlight();
+      const includedEffect ="";// "brightness(100%) contrast(100%)";
+layerView.effect = {
+  filter: {
+
+  },
+   includedEffect: includedEffect,
+};
+
+    })
+    .catch(function(error) {
+      // An error occurred during the layerview creation
+    });
+
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>

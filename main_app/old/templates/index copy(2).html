@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>GEOTEST</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+.esri-view-width-xlarge .esri-popup__main-container,
+.esri-view-width-large .esri-popup__main-container,
+.esri-view-width-medium .esri-popup__main-container
+{
+    width: 103px !important;
+    height: 50px !important;
+}
+div.esriPopupWrapper .zoomTo {
+  display: none;
+}
+.esri-icon-close,
+.esri-popup__navigation,
+.esri-popup__header-buttons,
+.esri-widget__heading,
+.esri-legend__layer-body
+{
+    display: none !important;
+}
+.esri-widget,
+.esri-popup__header-title{
+    font-size: 10px !important;
+    padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;
+
+}
+.esri-legend__service,
+.esri-ui-corner{
+     padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;   
+        width: 50px !important;
+}
+.esri-legend__ramp-label{
+    font-size: 10px !important;     
+    padding: 0 0 0 0 !important;
+    margin: 0 0 0 0 !important;   
+}
+
+.esri-legend__ramp-label:before {
+
+    display: none !important;
+
+}
+.esri-legend__ramp-label:last-child {
+    bottom: 0px!important;
+
+}
+.esri-legend__ramp-labels{
+    margin-left:-4px !important;
+    //padding-left: -10px !important;
+}
+
+.esri-ui-corner .esri-expand .esri-widget--panel, .esri-ui-corner .esri-expand .esri-widget--panel-height-only, .esri-ui-corner .esri-component>.esri-widget--panel, .esri-ui-corner .esri-component.esri-widget--panel
+{
+  width: 60px !important;  
+  background-color:#888888;font-size: 10px !important;
+}
+.esri-search__input-container{
+    width: 100px !important;
+}
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light-blue/main.css" />
+    <script src="https://js.arcgis.com/4.16/"></script>
+    <script src="https://kit.fontawesome.com/edd7f6e0ca.js" crossorigin="anonymous"></script>
+    <script>
+
+const url =  "http://gimslaw8.bget.ru/static/files/aurora_ext.csv";
+require(["esri/Map", 
+"esri/views/SceneView",
+"esri/layers/CSVLayer",
+"esri/layers/GeoJSONLayer",
+"esri/renderers/UniqueValueRenderer",
+"esri/widgets/Legend",
+"esri/core/watchUtils",
+"esri/TimeExtent",
+"esri/widgets/Expand",
+"esri/widgets/BasemapGallery",
+"esri/widgets/Search"], 
+function(Map, SceneView, CSVLayer, GeoJSONLayer, UniqueValueRenderer,Legend,watchUtils,TimeExtent,Expand,BasemapGallery,Search) {
+    const template = {
+    title: "",
+    content: "Intensivity {category} latitude {latitude} longitude {longitude}."
+    };
+    const map = new Map({
+        basemap: "oceans",
+        ground: "world-elevation",
+        maxZoom: 5,
+        effectiveMaxZoom:5,
+        effectiveMinZoom:5,
+        minZoom: 5,
+        maxScale: 5000000
+    });
+    
+    var renderer = {
+    type: "unique-value",  
+    defaultSymbol: { type: "line-3d",
+    symbolLayers: [{
+        type: "line",  
+        size: 2, 
+        material: { color: "white" },
+        cap: "round",
+        join: "round"
+    }]},
+    
+    visualVariables: [
+        {
+            type: "size",
+            field: "title",
+            stops: [
+                { value: 4, size: 3},
+                { value: 100, size: 3}
+            ]
+        }, //const colors = [ "#005435", "#007e4f", "#00a76a", "#00d184", "#00ffaa" ];
+        //const colors = [ "#00ffaa", "#17a67d", "#403c35", "#b02626", "#ff0000" ];
+        {
+            type: "color", 
+            field: "title", 
+            legendOptions: {
+            title: "Probability"
+            },
+            
+            stops: [
+                {
+                    value: 10, 
+                    color: "#00ffaa", 
+                    label: "0", 
+                },
+                {
+                    value: 27, 
+                    color: "#17a67d",
+                },  
+                {
+                    value: 50, 
+                    color: "#403c35", 
+                },        
+                {
+                    value: 70, 
+                    color: "#b02626", 
+                },
+                {
+                    value: 100, 
+                    color: "#ff0000", 
+                    label: " 100", 
+                }        
+            ]
+        
+        }
+    ]
+    };
+    
+    
+    
+    var popupTemplate = {
+        title: "Aurora Probability",
+        content: "{title}"
+    };
+    
+    const geoJSONLayer = new GeoJSONLayer({
+        url: "http://gimslaw8.bget.ru/test",
+        popupEnabled: true,
+        outFields: ["title"],
+        popupTemplate: popupTemplate,
+        renderer: renderer,
+        highlightOptions: {
+            haloOpacity: 0.9,
+            fillOpacity: 0.2
+        },
+    });
+    
+    map.add(geoJSONLayer);
+    
+    const view = new SceneView({
+    container: "viewDiv",
+    map: map,
+    scale: 60000000,
+    minScale:30000000,
+    center: [-101.17, 21.78],
+    qualityProfile: "high",
+    alphaCompositingEnabled: false,
+    environment: {
+        lighting: {
+            cameraTrackingEnabled: false
+        },
+        waterReflectionEnabled: true,
+        starsEnabled: true,
+        atmosphereEnabled: true,
+        atmosphere: {
+            quality: "high"
+        },
+    }
+    });
+
+              
+    var legend = new Legend({
+    view: view,
+    title: "Aurora Probability",
+    layerInfos: [{
+        layer: geoJSONLayer
+    }]
+    });
+      
+    view.ui.add(legend, "top-right");
+    view.popup.dockOptions.buttonEnabled = false;  
+    view.popup.viewModel.actions = [];
+    
+            var basemapGallery = new BasemapGallery({
+          view: view,
+          container: document.createElement("div")
+        });
+
+        var bgExpand = new Expand({
+          view: view,
+          content: basemapGallery
+        });
+
+        // close the expand whenever a basemap is selected
+        basemapGallery.watch("activeBasemap", function () {
+          var mobileSize =
+            view.heightBreakpoint === "xsmall" ||
+            view.widthBreakpoint === "xsmall";
+
+          if (mobileSize) {
+            bgExpand.collapse();
+          }
+        });
+
+        // Add the expand instance to the ui
+
+        view.ui.add(bgExpand, "top-left");
+        
+                var searchWidget = new Search({
+          view: view
+        });
+
+        // Add the search widget to the top right corner of the view
+        view.ui.add(searchWidget, {
+          position: "bottom-right"
+        });
+
+view.when(function() {
+            console.log('g');
+        console.log(view.environment.lighting.date);
+    setTimeout(function(){
+        console.log('g');
+        console.log(view.environment.lighting.date);
+    }, 1000);
+    
+    const camera = view.camera.clone();
+    camera.position.latitude = 90;
+    view.goTo(camera, { duration:5000,});
+});
+
+
+
+var switchBtnD_N = document.getElementById("switch-day_night");
+view.ui.add(switchBtnD_N, "top-left");
+switchBtnD_N.addEventListener("click", function () {
+
+
+ view.environment.lighting.date = new Date('June 17, 1995 15:00:00');
+
+});
+
+
+
+});
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+    <div id="infoDiv">
+       
+
+        <button id="switch-day_night" class="esri-component esri-widget--button esri-widget esri-interactiv" type="reset">
+            <i class="far fa-sun"></i> 
+        </button>
+    </div>
+  </body>
+</html>

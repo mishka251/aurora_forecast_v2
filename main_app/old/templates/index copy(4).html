@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>GEOTEST</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+.esri-view-width-xlarge .esri-popup__main-container,
+.esri-view-width-large .esri-popup__main-container,
+.esri-view-width-medium .esri-popup__main-container
+{
+    width: 103px !important;
+    height: 50px !important;
+}
+div.esriPopupWrapper .zoomTo {
+  display: none;
+}
+.esri-icon-close,
+.esri-popup__navigation,
+.esri-popup__header-buttons,
+.esri-widget__heading,
+.esri-legend__layer-body
+{
+    display: none !important;
+}
+.esri-widget,
+.esri-popup__header-title{
+    font-size: 10px !important;
+    padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;
+
+}
+.esri-legend__service,
+.esri-ui-corner{
+     padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;   
+        width: 50px !important;
+}
+.esri-legend__ramp-label{
+    font-size: 10px !important;     
+    padding: 0 0 0 0 !important;
+    margin: 0 0 0 0 !important;   
+}
+
+.esri-legend__ramp-label:before {
+
+    display: none !important;
+
+}
+.esri-legend__ramp-label:last-child {
+    bottom: 0px!important;
+
+}
+.esri-legend__ramp-labels{
+    margin-left:-4px !important;
+    //padding-left: -10px !important;
+}
+
+.esri-ui-corner .esri-expand .esri-widget--panel, .esri-ui-corner .esri-expand .esri-widget--panel-height-only, .esri-ui-corner .esri-component>.esri-widget--panel, .esri-ui-corner .esri-component.esri-widget--panel
+{
+  width: 60px !important;  
+  background-color:#888888;font-size: 10px !important;
+}
+.esri-search__input-container{
+    width: 100px !important;
+}
+      #viewDiv canvas {
+        filter: drop-shadow(16px 16px 10px rgba(0, 0, 0, 0.5));
+      }
+      
+#label {
+    color:white; font-size: 500%; z-index:1000; position: fixed; top: 40%; left: 25%; opacity:0;
+  opacity: 1;
+  transition: opacity 3s;
+    background: -webkit-linear-gradient(right,#5813fc,#1cc2fd,#7dfd94,#f5c926,#ff2b18);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#label.hide {
+  opacity: 0;
+}
+
+#parameters{
+//  position:absolute;
+  //z-index:100; 
+  //bottom:30px;
+  //left:10px;
+  background-color:
+  rgba(56,56,56,0.6);
+  color:rgba(255,255,255, 0.6);
+  font-size: 12px;
+  padding-left:5px; 
+  padding-right:5px
+}
+
+tr, td{
+    vertical-align: top;
+}
+
+#Bz_chart{
+  height: 200px;
+  width: 350px;
+    background-color:lightgrey;
+ // width: 200px;
+    position: absolute;
+    bottom: 90px; 
+    right: 10px;
+    z-index:1;
+    opacity: 0.6;
+    display:block;
+    transition: 2s;
+}
+
+#Solar_chart{
+  height: 200px;
+  width: 350px;
+    background-color:lightgrey;
+ // width: 200px;
+    position: absolute;
+    bottom: 390px; 
+    right: 10px;
+    z-index:1;
+    opacity: 0.6;
+    display:block;
+    transition: 2s;
+}
+
+#HPI_chart{
+  height: 200px;
+  width: 350px;
+    background-color:lightgrey;
+ // width: 200px;
+    position: absolute;
+    bottom: 0px; 
+    left: 10px;
+    z-index:1;
+    opacity: 0.6;
+    display:block;
+    transition: 2s;
+}
+#date-picker{
+    z-index:1000;
+      position: absolute;
+    top: 100px; 
+    left: 10px;  
+    width:500px;
+}
+
+header
+{
+grid-area: header;
+background:white;
+text-align:center;
+box-shadow: 0 0 5px rgba(0,0,0,0.5);
+padding:0.5em;
+overflow-y: visible;
+z-index: 101;
+}
+    </style>
+    
+  <!--  
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+-->
+<script src="https://kit.fontawesome.com/edd7f6e0ca.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light-blue/main.css" />
+    <script src="https://js.arcgis.com/4.16/"></script>
+   <!-- <script src="https://kit.fontawesome.com/edd7f6e0ca.js" crossorigin="anonymous"></script>-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+    let timestamp=new Date().toLocaleString().slice(0,17);;
+function pcsh1() {
+    var x = document.getElementById("label");
+    if (x.classList.contains("hide")) {
+      x.classList.remove("hide");
+    } else {
+      x.classList.add("hide");
+    }
+  }
+
+
+  
+async function getdatafromoutside(url){
+    //url = 'https://services.swpc.noaa.gov/products/solar-wind/mag-6-hour.json';
+    let response = await fetch(url);
+    if (response.ok) { 
+     let txt = await response.json();
+     
+     let arr = [];
+     for(let i=1; i< txt.length;i++){
+         let temp = [];
+         //new Date(Date.parse('01-01-1970 01:03:44'))
+        // temp.push(new Date(Date.parse(txt[i][0])));
+ temp.push(txt[i][0].substring(10,txt[i][0].length-7));
+
+         temp.push(parseFloat(txt[i][1]));
+         temp.push(parseFloat(txt[i][2]));
+         temp.push(parseFloat(txt[i][3]));
+         arr.push(temp);
+     }
+   // console.log(arr[0]);
+    
+    google.load("visualization", "1", {packages:["corechart"]});
+    //google.charts.load('current', {packages: ['corechart', 'line']});
+   google.charts.setOnLoadCallback( function() { drawBasic(arr) });
+   // google.charts.setOnLoadCallback(drawBasic(arr));arr
+    }else {
+      alert("Ошибка HTTP: " + response.status);
+    } 
+}
+
+async function getdatafromoutsideSolar(url){
+    //url = 'https://services.swpc.noaa.gov/products/solar-wind/mag-6-hour.json';
+    let response = await fetch(url);
+    if (response.ok) { 
+     let txt = await response.json();
+     
+     let arr = [];
+     for(let i=1; i< txt.length;i++){
+         let temp = [];
+         //new Date(Date.parse('01-01-1970 01:03:44'))
+        // temp.push(new Date(Date.parse(txt[i][0])));
+ temp.push(txt[i][0].substring(10,txt[i][0].length-7));
+
+         temp.push(parseFloat(txt[i][1]));
+         temp.push(parseFloat(txt[i][2]));
+         //temp.push(parseFloat(txt[i][3]));
+         arr.push(temp);
+     }
+   // console.log(arr[0]);
+    
+    google.load("visualization", "1", {packages:["corechart"]});
+    //google.charts.load('current', {packages: ['corechart', 'line']});
+   google.charts.setOnLoadCallback( function() { drawBasic2(arr) });
+   // google.charts.setOnLoadCallback(drawBasic(arr));arr
+    }else {
+      alert("Ошибка HTTP: " + response.status);
+    } 
+}
+
+async function getdatafromyd(){
+let url = 'http://gimslaw8.bget.ru/getdata.php?type=power';
+let response = await fetch(url);
+
+if (response.ok) {
+    let txt = await response.json();
+    let arr_ = [];
+    for(let i = 0; i < txt.length;i++){
+        let tmp = txt[i].split(',');
+        tmp = tmp.toString();
+        tmp = tmp.replace(/\s+/g, ' ').trim();
+        let a = tmp.split(' ');
+        let b = [];
+        //b.push(a[0]+' '+a[1]);
+        b.push(a[1]);
+        b.push(parseFloat(a[2]));
+         b.push(parseFloat(a[3]));
+        arr_.push(b);
+    }
+        google.load("visualization", "1", {packages:["corechart"]});
+
+   google.charts.setOnLoadCallback( function() { drawBasic3(arr_) });
+
+  //  console.log(arr[0]);
+
+    
+}
+
+else {
+  alert("Ошибка HTTP: " + response.status);
+}
+}
+
+async function getdata(url){
+url = 'http://gimslaw8.bget.ru/data';
+let response = await fetch(url);
+
+if (response.ok) { // если HTTP-статус в диапазоне 200-299
+  // получаем тело ответа (см. про этот метод ниже)
+ // let json = await response.json();
+ let txt = await response.json();
+ document.getElementById("NorthHPI").innerHTML = txt[0];
+ document.getElementById("SouthHPI").innerHTML = txt[1];
+ document.getElementById("Bx").innerHTML = txt[2];
+ document.getElementById("By").innerHTML = txt[3];
+ document.getElementById("Bz").innerHTML = txt[4];
+ document.getElementById("Long").innerHTML = txt[5];
+ document.getElementById("Lat").innerHTML = txt[6];
+ document.getElementById("speed").innerHTML = txt[7];
+  document.getElementById("density").innerHTML = txt[8];
+} else {
+  alert("Ошибка HTTP: " + response.status);
+}    
+}
+
+function drawBasic(arr) {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'D');
+      data.addColumn('number', 'Bx');
+      data.addColumn('number', 'By');
+      data.addColumn('number', 'Bz');
+
+      data.addRows(arr);
+
+      var options = {lineWidth: 1,
+             colors: ['#CC9900','#FF6600','#CC0000'],
+             bar: {groupWidth: '95%'},
+             legend: 'none',
+            title: 'Bx, By, Bz [nT]',
+            textStyle:{color: '#FFF'},
+            titleTextStyle : {color: 'white', fontSize: 9},
+           backgroundColor: '#373737',
+                hAxis: {
+         baselineColor: '#ccc',
+         gridlineColor: '#ccc',//textPosition: 'none',
+                textStyle:{color: '#FFF'}},
+                vAxis: {
+                     baselineColor: '#ccc',
+         gridlineColor: '#ccc',
+                    gridlines: { count:5 },
+                textStyle:{color: '#FFF'},
+                },
+                is3D: true};
+         
+
+      var chart = new google.visualization.LineChart(document.getElementById('Bz_chart'));
+
+      chart.draw(data, options);
+    }
+//
+function drawBasic2(arr) {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'D');
+      data.addColumn('number', 'density');
+      data.addColumn('number', 'speed');
+    //  data.addColumn('number', 'Bz');
+
+      data.addRows(arr);
+
+      var options = {lineWidth: 1,
+             colors: ['red','green'],//,'#FF6600','#CC0000'],
+             bar: {groupWidth: '95%'},
+             legend: 'none',
+            title: 'Density',
+            textStyle:{color: '#FFF'},
+            titleTextStyle : {color: 'white', fontSize: 9},
+           backgroundColor: '#373737',
+           series: {
+          0: {targetAxisIndex: 0},
+          1: {targetAxisIndex: 1}
+        },
+                hAxis: {
+                              0: {title: 'Density'},
+          1: {title: 'Speed'},
+         baselineColor: '#ccc',
+         gridlineColor: '#ccc',//textPosition: 'none',
+                textStyle:{color: '#FFF'}},
+                vAxis: {
+                     baselineColor: '#ccc',
+         gridlineColor: '#ccc',
+                    gridlines: { count:5 },
+                textStyle:{color: '#FFF'},
+                },
+                is3D: true};
+         
+
+      var chart = new google.visualization.LineChart(document.getElementById('Solar_chart'));
+
+      chart.draw(data, options);
+    }
+
+//
+//
+function drawBasic3(arr) {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'D');
+      data.addColumn('number', 'NorthHPI');
+      data.addColumn('number', 'SouthHPI');
+
+
+      data.addRows(arr);
+
+      var options = {lineWidth: 1,
+             colors: ['#CC9900','#FF6600'],
+             bar: {groupWidth: '95%'},
+             legend: 'none',
+            title: 'HPI',
+            textStyle:{color: '#FFF'},
+            titleTextStyle : {color: 'white', fontSize: 9},
+           backgroundColor: '#373737',
+                hAxis: {
+         baselineColor: '#ccc',
+         gridlineColor: '#ccc',//textPosition: 'none',
+                textStyle:{color: '#FFF'}},
+                vAxis: {
+                     baselineColor: '#ccc',
+         gridlineColor: '#ccc',
+                    gridlines: { count:5 },
+                textStyle:{color: '#FFF'},
+                },
+                is3D: true};
+         
+
+      var chart = new google.visualization.LineChart(document.getElementById('HPI_chart'));
+
+      chart.draw(data, options);
+    }
+    //
+    
+
+
+//
+async function getdatafromsand(url){
+    //url = 'https://services.swpc.noaa.gov/products/solar-wind/mag-6-hour.json';
+    let response = await fetch(url);
+    if (response.ok) { 
+     let txt = await response.json();
+     console.log(txt);
+     let arr = [];
+
+$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+            icons: {
+                time: 'far fa-clock',
+                date: 'far fa-calendar',
+                up: 'far fa-arrow-up',
+                down: 'far fa-arrow-down',
+                previous: 'far fa-chevron-left',
+                next: 'far fa-chevron-right',
+                today: 'far fa-calendar-check-o',
+                clear: 'far fa-trash',
+                close: 'far fa-times'
+            } });
+            
+            //d = new Date().toLocaleString().slice(0,17);
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                    locale: 'ru',
+                    enabledDates: txt,
+                    //format: 'DD/MM/YYYY, HH:mm',
+                    defaultDate: new Date(),
+                    format: 'YYYY-MM-DD HH:mm'
+                });
+            });
+        
+$('#datetimepicker1').on('change.datetimepicker', function(e) {
+   //alert(e.date + ' ' + e.oldDate)
+    newdate = new Date(e.date).toLocaleString().slice(0,17);
+    olddate = new Date(e.oldDate).toLocaleString().slice(0,17);
+if (typeof e.oldDate !== 'undefined' && e.oldDate !== null && newdate!=olddate) {
+    unix_timestamp= e.date;
+    var date = new Date(unix_timestamp);
+    date = date.toLocaleString();
+    timestamp = newdate;
+//alert(newdate + ' ' + olddate);
+//alert(e.date + ' ' + e.oldDate)
+}
+});
+
+
+
+    }
+    else {
+      alert("Ошибка HTTP: " + response.status);
+    } 
+}
+getdatafromsand('http://gimslaw8.bget.ru/sand');
+//getdata('http://gimslaw8.bget.ru/data');
+
+getdatafromoutside('https://services.swpc.noaa.gov/products/solar-wind/mag-6-hour.json');
+getdatafromoutsideSolar('https://services.swpc.noaa.gov/products/solar-wind/plasma-6-hour.json');
+getdatafromyd();
+
+const url =  "http://gimslaw8.bget.ru/static/files/aurora_ext.csv";
+require(["esri/Map", 
+"esri/views/SceneView",
+"esri/layers/CSVLayer",
+"esri/layers/GeoJSONLayer",
+"esri/renderers/UniqueValueRenderer",
+"esri/widgets/Legend",
+"esri/core/watchUtils",
+"esri/TimeExtent",
+"esri/widgets/Expand",
+"esri/widgets/BasemapGallery",
+"esri/widgets/Search",
+"esri/widgets/support/DatePicker"], 
+function(Map, SceneView, CSVLayer, GeoJSONLayer, UniqueValueRenderer,Legend,watchUtils,TimeExtent,Expand,BasemapGallery,Search,DatePicker) {
+    const template = {
+    title: "",
+    content: "Intensivity {category} latitude {latitude} longitude {longitude}."
+    };
+    
+    const map = new Map({
+        basemap: "oceans",
+        ground: "world-elevation",
+        maxZoom: 5,
+        effectiveMaxZoom:5,
+        effectiveMinZoom:5,
+        minZoom: 5,
+        maxScale: 5000000
+    });
+    
+    var renderer = {
+    type: "unique-value",  
+    defaultSymbol: { type: "line-3d",
+    symbolLayers: [{
+        type: "line", 
+                       // material: { color: [255, 84, 54, 0] },
+                outline: { color: [255, 84, 54, 0.6], size: 1 },
+        //size: 3, 
+        //material: { color: "white" },
+        //cap: "round",
+        join: "round"
+    }]},
+    
+    visualVariables: [
+        {
+            type: "size",
+            field: "title",
+            stops: [
+                { value: 4, size: 1},
+                { value: 100, size: 1}
+            ]
+        }, //const colors = [ "#005435", "#007e4f", "#00a76a", "#00d184", "#00ffaa" ];
+        //const colors = [ "#00ffaa", "#17a67d", "#403c35", "#b02626", "#ff0000" ];
+        //const colors = [ "#5813fc", "#1cc2fd", "#7dfd94", "#f5c926", "#ff2b18" ];
+        {
+            type: "color", 
+            field: "title", 
+            legendOptions: {
+            title: "Probability"
+            },
+            //#5813fc,#1cc2fd,#7dfd94,#f5c926,#ff2b18
+            stops: [
+                {
+                    value: 4, 
+                    color: "#5813fc", 
+                    label: "0", 
+                },
+                {
+                    value: 8, 
+                    color: "#1cc2fd",
+                },  
+                {
+                    value: 16, 
+                    color: "#7dfd94", 
+                },        
+                {
+                    value: 32, 
+                    color: "#f5c926", 
+                },
+                {
+                    value: 64, 
+                    color: "#ff2b18", 
+                    label: " 100", 
+                }        
+            ]
+        
+        }
+    ]
+    };
+    
+    
+    
+    var popupTemplate = {
+        title: "Aurora Probability",
+        content: "{title}"
+    };
+    
+    const geoJSONLayer = new GeoJSONLayer({
+        url: "http://gimslaw8.bget.ru/test?tmstp=1",//+timestamp,
+        popupEnabled: true,
+        outFields: ["title"],
+        popupTemplate: popupTemplate,
+        renderer: renderer,
+        highlightOptions: {
+            haloOpacity: 0.9,
+            fillOpacity: 0.2
+        },
+        elevationInfo:{
+            mode:'relative-to-scene'
+        }
+    });
+    geoJSONLayer.opacity = 1;
+    
+//var splineProxy = new SplineLayerProxy({
+//  lineLayer: geoJSONLayer,
+//});
+
+
+    map.add(geoJSONLayer);
+    
+    const view = new SceneView({
+    container: "viewDiv",
+    map: map,
+    scale: 60000000,
+    minScale:30000000,
+    center: [-101.17, 21.78],
+    qualityProfile: "high",
+    alphaCompositingEnabled: false,
+    environment: {
+        lighting: {
+            cameraTrackingEnabled: false
+        },
+        waterReflectionEnabled: true,
+        starsEnabled: true,
+        atmosphereEnabled: true,
+        atmosphere: {
+            quality: "high"
+        },
+    }
+    });
+
+//splineProxy.whenSplineLayer().then(function(smoothRoute) {
+    
+//  map.add(smoothRoute);
+//});              
+    var legend = new Legend({
+    view: view,
+    title: "Aurora Probability",
+    layerInfos: [{
+        layer: geoJSONLayer
+    }]
+    });
+
+view.ui.components =["zoom"];
+
+    view.ui.add(legend, "top-right");
+    view.popup.dockOptions.buttonEnabled = false;  
+    view.popup.viewModel.actions = [];
+    
+
+           /* var basemapGallery = new BasemapGallery({
+          view: view,
+          container: document.createElement("div")
+        });*/
+
+        var bgExpand = new Expand({
+          view: view,
+          content: parameters
+        });
+
+        // close the expand whenever a basemap is selected
+     /*   basemapGallery.watch("activeBasemap", function () {
+          var mobileSize =
+            view.heightBreakpoint === "xsmall" ||
+            view.widthBreakpoint === "xsmall";
+
+          if (mobileSize) {
+            bgExpand.collapse();
+          }
+        });*/
+
+        // Add the expand instance to the ui
+
+        view.ui.add(bgExpand, "top-left");
+        
+                var searchWidget = new Search({
+          view: view
+        });
+
+        // Add the search widget to the top right corner of the view
+        view.ui.add(searchWidget, {
+          position: "bottom-right"
+        });
+
+view.when(function() {
+document.getElementById('label').style.display = 'inline';
+    
+    setTimeout(function(){
+pcsh1();
+    }, 5010);
+    
+    const camera = view.camera.clone();
+    camera.position.latitude = 90;
+    view.goTo(camera, { duration:5000,});
+    
+
+
+});
+ // var today = new Date();
+ // document.getElementById('datetime').value=e = today.toISOString().substr(0, 10);
+   //document.getElementById('datetime').value= '12-12-2020';
+    //s.addEventListener("click", function () {
+    //    alert(s.innerH);
+   // });
+
+//var switchBtnD_N = document.getElementById("switch-day_night");
+//switchBtnD_N.addEventListener("click", function () {
+
+
+// view.environment.lighting.date = new Date('June 17, 1995 15:00:00');
+
+//});
+
+
+
+});
+    </script>
+  </head>
+  <body>
+      <header>12344556</header>
+    <div id="viewDiv"></div>
+    <div id="infoDiv">
+       
+
+        <button id="switch-day_night" class="esri-component esri-widget--button esri-widget esri-interactiv" type="reset">
+            <i class="far fa-sun"></i> 
+        </button>
+    </div>
+    <div id="label" style="display:none">AURORA</div>
+
+<div id = "parameters" >
+<table>
+    <tr>
+        <td colspan="2" style="text-align:center;padding-top:5px">Hemispheric Power (GW)</td>
+    </tr>
+    <tr>
+        <td>NorthHPI</td>
+        <td><span id="NorthHPI">-</span></td>
+    </tr>
+    <tr>
+        <td>SouthHPI</td>
+        <td><span id="SouthHPI">-</span></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;;padding-top:5px">Solar Wind</td>
+    </tr>
+    <tr>
+        <td>Density</td>
+        <td><span id="density">-</span>&nbsp;#/cc</td>
+    </tr>
+    <tr>
+        <td>Speed</td>
+        <td><span id="speed">-</span>&nbsp;km/s</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;padding-top:5px">Interplanetary Magnetic Field<br/>(GSM Coordinates)</td>
+    </tr>
+    <tr>
+        <td>Bx</td>
+        <td><span id="Bx">-</span>&nbsp;nT</td>
+    </tr>
+    <tr>
+                <td>By</td>
+        <td><span id="By">-</span>&nbsp;nT</td>
+        
+    </tr>
+    <tr>
+        <td>Bz</td>
+        <td><span id="Bz">-</span>&nbsp;nT</td>   
+    </tr>
+    <tr>
+        <td>Latx</td>
+        <td><span id="Lat">-</span>&nbsp;&deg;</td>
+    </tr>
+    <tr>
+        <td>Long</td>
+        <td><span id="Long">-</span>&nbsp;&deg;</td>
+    </tr>
+</table>
+    </div>
+    <div id="Bz_chart" style="">
+        111
+    </div>
+    <div id="Solar_chart" style="">
+        111
+    </div>
+    <div id="HPI_chart" style="">
+        111
+    </div> 
+    
+<div id="date-picker">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group" id="fff">
+                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <button id="btn">GO</button>
+        </div>
+        <script type="text/javascript">
+
+        </script>
+    </div>
+</div>
+</div>
+ <script>
+       document.getElementById("btn").onclick = function() {
+           alert('ok');
+   // alert(document.getElementById("datetimepicker1").innerHTML);
+  };
+
+ </script> 
+  </body>
+</html>

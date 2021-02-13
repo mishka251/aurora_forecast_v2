@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>GEOTEST</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.16/"></script>
+    <script>
+    const url =  "http://gimslaw8.bget.ru/static/files/aurora_ext.csv";
+      require(["esri/Map", "esri/views/SceneView","esri/layers/CSVLayer"], function(Map, SceneView, CSVLayer) {
+        const template = {
+          title: "",
+          content: "Intensivity {category} latitude {latitude} longitude {longitude}."
+        };
+        
+       const csvLayer = new CSVLayer({
+          url: url,
+          copyright: "",
+          popupTemplate: template
+        }); 
+        
+         csvLayer.renderer = {
+          type: "simple", 
+          symbol: {
+            type: "point-3d",
+            symbolLayers: [
+              {
+                type: "icon", 
+                size:15
+              }
+            ]
+          },
+          visualVariables: [
+          {
+              type: "size",
+              field: "Category",
+                 stops: [
+                    { value: 4, size: 8},
+                    { value: 30, size: 8}
+            ]},
+            {
+              type: "color",
+              field: "category",
+              stops: [
+                { value: 4, color: [0, 116, 165,0.1] }, 
+                { value: 15, color: [246, 255, 146,0.15] },
+                { value: 27, color: 	[255, 200, 47,0.2] },
+                { value: 40, color: [241, 106, 22,0.23] },
+                { value: 70, color: [231, 51, 26,0.28] },
+                { value: 100, color: [255, 0, 0,0.4] }
+              ]
+            },
+          ]
+        };
+        
+        const map = new Map({
+            basemap: "streets-night-vector",
+            ground: "world-elevation",
+            maxZoom: 5,
+            effectiveMaxZoom:5,
+            effectiveMinZoom:5,
+            minZoom: 5,
+            maxScale: 5000000
+        });
+        map.add(csvLayer);
+        
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          scale: 60000000,
+          minScale:30000000,
+          center: [-101.17, 21.78],
+          qualityProfile: "high",
+          alphaCompositingEnabled: true,
+          highlightOptions: {
+            fillOpacity: 0,
+            color: "#ffffff"
+          },
+          constraints: {
+            altitude: {
+              min: 7000000
+            }
+          },
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>For Paper Manuscript</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.16/"></script>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/Graphic",
+      "esri/layers/FeatureLayer",
+    ], function(Map, MapView,Graphic,FeatureLayer) {
+
+      var map = new Map({
+        basemap: "topo-vector"
+      });
+
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [23.70,69.46],
+        zoom: 4
+      });
+      
+var lats = [71.09,70.54,69.76,69.66,69.46,69.30,69.06,68.56,68.35,68.02,67.84,67.37,66.90];
+var longs = [25.79,22.22,27.01,18.94,23.70,16.03,20.77,27.29,18.82,23.53,20.42,26.63,24.08];
+var labels = ['NOR','SOR','KEV','TRO','MAS','AND','KIL','IVA','ABK','MUO','KIR','SOD','PEL'];
+
+for(i=0; i < 13; i++){
+var symbol = {
+          type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+          color: [255, 0, 0],
+          size: "8px",
+          outline: {
+            color: [255, 0, 0],
+            width: 0.5
+          }
+        };
+var textSymbol = {
+  type: "text",  // autocasts as new TextSymbol()
+  color: "black",
+  text: labels[i],
+  yoffset: 10,
+  font: {  // autocasts as new Font()
+    size: 9,
+    weight: "bold"
+  }
+};       
+var point = {
+  type: "point", // autocasts as new Point()
+  longitude: longs[i],
+  latitude: lats[i]
+};
+
+var pointGraphic = new Graphic({
+  geometry: point,
+  symbol: symbol
+});
+var pointGraphic2 = new Graphic({
+  geometry: point,
+  symbol: textSymbol
+});
+view.graphics.addMany([pointGraphic,pointGraphic2]);    
+}      
+
+
+const layer = new FeatureLayer({
+  url: "https://services.arcgis.com/nGt4QxSblgDfeJn9/ArcGIS/rest/services/Graticule/FeatureServer/5"
+});
+map.add(layer); 
+
+const layer2 = new FeatureLayer({
+  url: "https://services.arcgis.com/nGt4QxSblgDfeJn9/ArcGIS/rest/services/Graticule/FeatureServer/10"
+});
+map.add(layer2); 
+
+
+
+
+//
+
+        var polyline = {
+          type: "polyline", // autocasts as new Polyline()
+          paths: [
+            [-180, 66.5622],
+            [180, 66.5622]
+          ]
+        };
+
+        // Create a symbol for drawing the line
+        var lineSymbol = {
+          type: "simple-line", // autocasts as SimpleLineSymbol()
+          color: [226, 119, 40],
+          width: 2,
+          style: "dash"
+        };
+        
+                var polylineGraphic = new Graphic({
+          geometry: polyline,
+          symbol: lineSymbol
+                });
+                
+                view.graphics.add(polylineGraphic);  
+    });
+  </script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>
