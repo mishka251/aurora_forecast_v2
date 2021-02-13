@@ -1,509 +1,582 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <title>GEOTEST</title>
     <style>
-    html,
-    body,
-    viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-    }
-    .esri-view-width-xlarge .esri-popup__main-container,
-    .esri-view-width-large .esri-popup__main-container,
-    .esri-view-width-medium .esri-popup__main-container
-    {
-        width: 103px !important;
-        height: 65px !important;
-    }
-    .esri-feature-content{
-        padding-top:7px;
-    }
-    .esri-popup__header{
-        background-color: #595f60; color:rgba(255,255,255, 0.6); 
-    }
-    div.esriPopupWrapper .zoomTo {
-      display: none;
-    }
-    .esri-icon-close,
-    .esri-popup__navigation,
-    .esri-popup__header-buttons,
-    .esri-widget__heading,
-    .esri-legend__layer-body
-    {
-        display: none !important;
-    }
-    .esri-widget,
-    .esri-popup__header-title{
-        font-size: 10px !important;
-        padding: 0 0 0 0 !important;
-        margin: 4 0 0 0 !important;
-    
-    }
-    .esri-legend__service,
-    .esri-ui-corner{
-         padding: 0 0 0 0 !important;
-        margin: 4 0 0 0 !important;   
+        html,
+        body,
+        viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .esri-view-width-xlarge .esri-popup__main-container,
+        .esri-view-width-large .esri-popup__main-container,
+        .esri-view-width-medium .esri-popup__main-container {
+            width: 103px !important;
+            height: 65px !important;
+        }
+
+        .esri-feature-content {
+            padding-top: 7px;
+        }
+
+        .esri-popup__header {
+            background-color: #595f60;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        div.esriPopupWrapper .zoomTo {
+            display: none;
+        }
+
+        .esri-icon-close,
+        .esri-popup__navigation,
+        .esri-popup__header-buttons,
+        .esri-widget__heading,
+        .esri-legend__layer-body {
+            display: none !important;
+        }
+
+        .esri-widget,
+        .esri-popup__header-title {
+            font-size: 10px !important;
+            padding: 0 0 0 0 !important;
+            margin: 4 0 0 0 !important;
+
+        }
+
+        .esri-legend__service,
+        .esri-ui-corner {
+            padding: 0 0 0 0 !important;
+            margin: 4 0 0 0 !important;
             width: 50px !important;
-           // height:800px!important;
-    }
-    .esri-legend__ramp-label{
-        font-size: 10px !important;     
-        padding: 0 0 0 0 !important;
-        margin: 0 0 0 0 !important;   
-        //height:800px!important;
-    }
-    .esri-legend__ramp-label:before {
-        display: none !important;
-    }
-    .esri-legend__ramp-label:last-child {
-        bottom: 0px!important;
-    }
-    .esri-legend__ramp-labels{
-        margin-left:-4px !important
-    }
-    .esri-ui-corner .esri-expand .esri-widget--panel, .esri-ui-corner .esri-expand .esri-widget--panel-height-only, .esri-ui-corner .esri-component>.esri-widget--panel, .esri-ui-corner .esri-component.esri-widget--panel
-    {
-      width: 60px !important;  
-   //   height:800px!important;
-      background-color:#888888;font-size: 10px !important;
-    }
-    .esri-search__form{
-        color:white!important 
-    }
-    .esri-search__input-container{
-        width: 100px !important; background-color:#4a4a4a!important;color:#e8e8e8!important;border: 1px solid transparent!important;
-        border-radius: 4px!important background-color:#4a4a4a!important
-    }
-    canvas {
-    filter: drop-shadow(16px 16px 10px rgba(0, 0, 0, 0.5));
-    }
-    .esri-input, .esri-search__input{
-        background-color:#4a4a4a!important;
-        color:white!important
-    } 
-    .esri-search__submit-button, .esri-widget--button{
-        background-color:#4a4a4a!important;
-        color:white!important    
-    }
-    #label {
-        color:white; font-size: 500%; z-index:1000; position: fixed; top: 40%; left: 25%; opacity:0;
-        opacity: 1;
-        transition: opacity 3s;
-        background: -webkit-linear-gradient(right,#5813fc,#1cc2fd,#7dfd94,#f5c926,#ff2b18);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    #label.hide {
-      opacity: 0;
-    }
-    
-    #Bz_chart{
-        height: 203px;
-        width: 110%;
-        background-color:lightgrey;
-        z-index:1;
-        opacity: 0.6;
-        display:block;
-        transition: 2s;
-    }
-    
-    #Solar_chart{
-        height: 203px;
-        width: 110%;
-        background-color:lightgrey;
-        z-index:1;
-        opacity: 0.6;
-        display:block;
-        transition: 2s;
-    }
-    
-    #HPI_chart{
-        height: 203px;
-        width: 110%;
-        background-color:lightgrey;
-        z-index:1;
-        opacity: 0.6;
-        display:block;
-        transition: 2s;
-    }
-    #date-picker{
-        z-index:1000;
-        position: absolute;
-        top: 100px; 
-        left: 10px;  
-        width:500px;
-    }
-    
-    .form-control{
-        color: #e8e8e8;
-        background-color: #4a4a4a;
-        border-color: #ccc;
-        border:1px solid #ccc;
-    }
-    
-    header
-    {
-    grid-area: header;
-    background: #3a3a3a;
-    text-align:center;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    padding:0.5em;
-    overflow-y: visible;
-    z-index: 101;
-    }
-    
-    .flex-container{
-        width: 620px;
-        display: -webkit-flex; /* Safari */     
-        display: flex; /* Standard syntax */
-        margin: auto;
-    }
-    .flex-container .column{
-        -webkit-flex: 1; /* Safari */
-        -ms-flex: 1; /* IE 10 */
-        flex: 1; /* Standard syntax */
-    }
-    
-    .btn-primary {
-        color: #fff;
-        background-color: #337ab7;
-        border-color: #2e6da4;
-    }
-    
-    .btn {
-        display: inline-block;
-        padding: 6px 12px;
-        margin-bottom: 0;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        -ms-touch-action: manipulation;
-        touch-action: manipulation;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent;
-        border-radius: 4px;
-    }
-    
-    .vl {
-      border-left: 6px solid green;
-      height: 500px;
-    }
-    
-    /* Center the loader */
-    #loader {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 100;
-      width: 120px;
-      height: 120px;
-      margin: -76px 0 0 -76px;
-      border: 16px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 16px solid #3498db;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
-    }
-    
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+        / / height: 800 px !important;
+        }
 
-.esri-legend__layer-cell{
-    vertical-align: top!important;
-}
-.esri-legend__layer canvas{
-    height:530px!important;
+        .esri-legend__ramp-label {
+            font-size: 10px !important;
+            padding: 0 0 0 0 !important;
+            margin: 0 0 0 0 !important;
+        / / height: 800 px !important;
+        }
 
-    // background-color: blue;
-}
-.esri-ui-top-right.esri-ui-corner{
-  height:600px!important;  
-}
+        .esri-legend__ramp-label:before {
+            display: none !important;
+        }
 
-div#leg.esri-component.esri-legend.esri-widget.esri-widget--panel 
-{
-   
-    height:860px!important;
-    
-}
-.esri-view-height-small .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel-height-only, .esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel, .esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel-height-only{
-    max-height:650px!important;
-}
-.esri-legend__ramp-labels{
-    //background-color: red;
-     height:530px!important;
-}
+        .esri-legend__ramp-label:last-child {
+            bottom: 0px !important;
+        }
 
-.action-button{
-color: #e6e6e6; background-color: #1d4a71; border-color: #4d79a0;
-}
-      #optionsDiv {
-        position: absolute;
-        bottom: 17px;
-        width: 100%;
-        padding: 20px 0;
-        z-index: 1;
-        text-align: center;
-        left:10%;
-      }
-.nav_butt{
-    color: #e6e6e6; background-color: transparent; border-color: #4d79a0; font-size:small;
-}
-</style>
-    
+        .esri-legend__ramp-labels {
+            margin-left: -4px !important
+        }
 
-<script src="https://kit.fontawesome.com/edd7f6e0ca.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        .esri-ui-corner .esri-expand .esri-widget--panel, .esri-ui-corner .esri-expand .esri-widget--panel-height-only, .esri-ui-corner .esri-component > .esri-widget--panel, .esri-ui-corner .esri-component.esri-widget--panel {
+            width: 60px !important;
+        / / height: 800 px !important;
+            background-color: #888888;
+            font-size: 10px !important;
+        }
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        .esri-search__form {
+            color: white !important
+        }
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+        .esri-search__input-container {
+            width: 100px !important;
+            background-color: #4a4a4a !important;
+            color: #e8e8e8 !important;
+            border: 1px solid transparent !important;
+            border-radius: 4px !important
+            background-color: #4a4a4a !important
+        }
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light-blue/main.css" />
+        canvas {
+            filter: drop-shadow(16px 16px 10px rgba(0, 0, 0, 0.5));
+        }
+
+        .esri-input, .esri-search__input {
+            background-color: #4a4a4a !important;
+            color: white !important
+        }
+
+        .esri-search__submit-button, .esri-widget--button {
+            background-color: #4a4a4a !important;
+            color: white !important
+        }
+
+        #label {
+            color: white;
+            font-size: 500%;
+            z-index: 1000;
+            position: fixed;
+            top: 40%;
+            left: 25%;
+            opacity: 0;
+            opacity: 1;
+            transition: opacity 3s;
+            background: -webkit-linear-gradient(right, #5813fc, #1cc2fd, #7dfd94, #f5c926, #ff2b18);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #label.hide {
+            opacity: 0;
+        }
+
+        #Bz_chart {
+            height: 203px;
+            width: 110%;
+            background-color: lightgrey;
+            z-index: 1;
+            opacity: 0.6;
+            display: block;
+            transition: 2s;
+        }
+
+        #Solar_chart {
+            height: 203px;
+            width: 110%;
+            background-color: lightgrey;
+            z-index: 1;
+            opacity: 0.6;
+            display: block;
+            transition: 2s;
+        }
+
+        #HPI_chart {
+            height: 203px;
+            width: 110%;
+            background-color: lightgrey;
+            z-index: 1;
+            opacity: 0.6;
+            display: block;
+            transition: 2s;
+        }
+
+        #date-picker {
+            z-index: 1000;
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            width: 500px;
+        }
+
+        .form-control {
+            color: #e8e8e8;
+            background-color: #4a4a4a;
+            border-color: #ccc;
+            border: 1px solid #ccc;
+        }
+
+        header {
+            grid-area: header;
+            background: #3a3a3a;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            padding: 0.5em;
+            overflow-y: visible;
+            z-index: 101;
+        }
+
+        .flex-container {
+            width: 620px;
+            display: -webkit-flex; /* Safari */
+            display: flex; /* Standard syntax */
+            margin: auto;
+        }
+
+        .flex-container .column {
+            -webkit-flex: 1; /* Safari */
+            -ms-flex: 1; /* IE 10 */
+            flex: 1; /* Standard syntax */
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .vl {
+            border-left: 6px solid green;
+            height: 500px;
+        }
+
+        /* Center the loader */
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 100;
+            width: 120px;
+            height: 120px;
+            margin: -76px 0 0 -76px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .esri-legend__layer-cell {
+            vertical-align: top !important;
+        }
+
+        .esri-legend__layer canvas {
+            height: 530px !important;
+
+        / / background-color: blue;
+        }
+
+        .esri-ui-top-right.esri-ui-corner {
+            height: 600px !important;
+        }
+
+        div#leg.esri-component.esri-legend.esri-widget.esri-widget--panel {
+
+            height: 860px !important;
+
+        }
+
+        .esri-view-height-small .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel-height-only, .esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel, .esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel-height-only {
+            max-height: 650px !important;
+        }
+
+        .esri-legend__ramp-labels {
+        / / background-color: red;
+            height: 530px !important;
+        }
+
+        .action-button {
+            color: #e6e6e6;
+            background-color: #1d4a71;
+            border-color: #4d79a0;
+        }
+
+        #optionsDiv {
+            position: absolute;
+            bottom: 17px;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 1;
+            text-align: center;
+            left: 10%;
+        }
+
+        .nav_butt {
+            color: #e6e6e6;
+            background-color: transparent;
+            border-color: #4d79a0;
+            font-size: small;
+        }
+    </style>
+
+
+    <script src="https://kit.fontawesome.com/edd7f6e0ca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"
+            integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg=="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css"
+          integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g=="
+          crossorigin="anonymous"/>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light-blue/main.css"/>
     <script src="https://js.arcgis.com/4.16/"></script>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    
-    
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+          rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script>
-    let view="";
-    let zoom = "";
-    let searchWidget="";
-    let timestamp=new Date().toLocaleString().slice(0,17);;
+        let view = "";
+        let zoom = "";
+        let searchWidget = "";
+        let timestamp = new Date().toLocaleString().slice(0, 17);
+        ;
 
-async function getdatafromoutside(url){
-    let response = await fetch(url);
-    if (response.ok) { 
-     let txt = await response.json();
-     let arr = [];
-     for(let i=1; i< txt.length;i++){
-         let temp = [];
-         temp.push(txt[i][0].substring(10,txt[i][0].length-7));
-         temp.push(parseFloat(txt[i][1]));
-         temp.push(parseFloat(txt[i][2]));
-         temp.push(parseFloat(txt[i][3]));
-         arr.push(temp);
-     }
-    google.load("visualization", "1", {packages:["corechart"]});
-    google.charts.setOnLoadCallback( function() { drawBasic(arr) });
-    }else {
-      alert("Ошибка HTTP: " + response.status);
-    } 
-}
-
-async function getdatafromoutsideSolar(url){
-    let response = await fetch(url);
-    if (response.ok) { 
-     let txt = await response.json();
-     let arr = [];
-     for(let i=1; i< txt.length;i++){
-         let temp = [];
-         temp.push(txt[i][0].substring(10,txt[i][0].length-7));
-         temp.push(parseFloat(txt[i][1]));
-         temp.push(parseFloat(txt[i][2]));
-         arr.push(temp);
-     }
-    google.load("visualization", "1", {packages:["corechart"]});
-    google.charts.setOnLoadCallback( function() { drawBasic2(arr) });
-    }else {
-      alert("Ошибка HTTP: " + response.status);
-    } 
-}
-
-async function getdatafromyd(){
-    let url = 'http://gimslaw8.bget.ru/getdata.php?type=power&dt=2021-01-02-11:55';
-    let response = await fetch(url);
-    if (response.ok) {
-        let txt = await response.json();
-        let arr_ = [];
-        for(let i = 0; i < txt.length;i++){
-            let tmp = txt[i].split(',');
-            tmp = tmp.toString();
-            tmp = tmp.replace(/\s+/g, ' ').trim();
-            let a = tmp.split(' ');
-            let b = [];
-            //b.push(a[0]+' '+a[1]);
-            b.push(a[1]);
-            b.push(parseFloat(a[2]));
-             b.push(parseFloat(a[3]));
-            arr_.push(b);
+        async function getdatafromoutside(url) {
+            let response = await fetch(url);
+            if (response.ok) {
+                let txt = await response.json();
+                let arr = [];
+                for (let i = 1; i < txt.length; i++) {
+                    let temp = [];
+                    temp.push(txt[i][0].substring(10, txt[i][0].length - 7));
+                    temp.push(parseFloat(txt[i][1]));
+                    temp.push(parseFloat(txt[i][2]));
+                    temp.push(parseFloat(txt[i][3]));
+                    arr.push(temp);
+                }
+                google.load("visualization", "1", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(function () {
+                    drawBasic(arr)
+                });
+            } else {
+                alert("Ошибка HTTP: " + response.status);
+            }
         }
-        google.load("visualization", "1", {packages:["corechart"]});
-        google.charts.setOnLoadCallback( function() { drawBasic3(arr_) });
-    }
-    else {
-      alert("Ошибка HTTP: " + response.status);
-    }
-}
 
-async function getdata(url){
-let response = await fetch(url);
-if (response.ok) { 
- let txt = await response.json();
- document.getElementById("NorthHPI").innerHTML = txt[0];
- document.getElementById("SouthHPI").innerHTML = txt[1];
- document.getElementById("Bx").innerHTML = txt[2];
- document.getElementById("By").innerHTML = txt[3];
- document.getElementById("Bz").innerHTML = txt[4];
- document.getElementById("Long").innerHTML = txt[5];
- document.getElementById("Lat").innerHTML = txt[6];
- document.getElementById("speed").innerHTML = txt[7];
-  document.getElementById("density").innerHTML = txt[8];
-} else {
-  alert("Ошибка HTTP: " + response.status);
-}    
-}
+        async function getdatafromoutsideSolar(url) {
+            let response = await fetch(url);
+            if (response.ok) {
+                let txt = await response.json();
+                let arr = [];
+                for (let i = 1; i < txt.length; i++) {
+                    let temp = [];
+                    temp.push(txt[i][0].substring(10, txt[i][0].length - 7));
+                    temp.push(parseFloat(txt[i][1]));
+                    temp.push(parseFloat(txt[i][2]));
+                    arr.push(temp);
+                }
+                google.load("visualization", "1", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(function () {
+                    drawBasic2(arr)
+                });
+            } else {
+                alert("Ошибка HTTP: " + response.status);
+            }
+        }
 
-function drawBasic(arr) {
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'D');
-      data.addColumn('number', 'Bx [nT]');
-      data.addColumn('number', 'By [nT]');
-      data.addColumn('number', 'Bz [nT]');
-      data.addRows(arr);
-      var options = {lineWidth: 1,
-             colors: ['#CC9900','#FF6600','#CC0000'],
-             bar: {groupWidth: '95%'},
-             legend: {position: 'top',textStyle: {color: '#F5F5F7'}},
-             title: $('<div>&#32;&#32;&#32; REAL TIME CHARTS &#10;</div>').html(),//'&#32; REAL TIME CHARTS \n',
-            textStyle:{color: '#FFF'},
-            titleTextStyle : {color: 'white', fontSize: 9},
-           backgroundColor: '#373737',
+        async function getdatafromyd() {
+            let url = 'http://gimslaw8.bget.ru/getdata.php?type=power&dt=2021-01-02-11:55';
+            let response = await fetch(url);
+            if (response.ok) {
+                let txt = await response.json();
+                let arr_ = [];
+                for (let i = 0; i < txt.length; i++) {
+                    let tmp = txt[i].split(',');
+                    tmp = tmp.toString();
+                    tmp = tmp.replace(/\s+/g, ' ').trim();
+                    let a = tmp.split(' ');
+                    let b = [];
+                    //b.push(a[0]+' '+a[1]);
+                    b.push(a[1]);
+                    b.push(parseFloat(a[2]));
+                    b.push(parseFloat(a[3]));
+                    arr_.push(b);
+                }
+                google.load("visualization", "1", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(function () {
+                    drawBasic3(arr_)
+                });
+            } else {
+                alert("Ошибка HTTP: " + response.status);
+            }
+        }
+
+        async function getdata(url) {
+            let response = await fetch(url);
+            if (response.ok) {
+                let txt = await response.json();
+                document.getElementById("NorthHPI").innerHTML = txt[0];
+                document.getElementById("SouthHPI").innerHTML = txt[1];
+                document.getElementById("Bx").innerHTML = txt[2];
+                document.getElementById("By").innerHTML = txt[3];
+                document.getElementById("Bz").innerHTML = txt[4];
+                document.getElementById("Long").innerHTML = txt[5];
+                document.getElementById("Lat").innerHTML = txt[6];
+                document.getElementById("speed").innerHTML = txt[7];
+                document.getElementById("density").innerHTML = txt[8];
+            } else {
+                alert("Ошибка HTTP: " + response.status);
+            }
+        }
+
+        function drawBasic(arr) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'D');
+            data.addColumn('number', 'Bx [nT]');
+            data.addColumn('number', 'By [nT]');
+            data.addColumn('number', 'Bz [nT]');
+            data.addRows(arr);
+            var options = {
+                lineWidth: 1,
+                colors: ['#CC9900', '#FF6600', '#CC0000'],
+                bar: {groupWidth: '95%'},
+                legend: {position: 'top', textStyle: {color: '#F5F5F7'}},
+                title: $('<div>&#32;&#32;&#32; REAL TIME CHARTS &#10;</div>').html(),//'&#32; REAL TIME CHARTS \n',
+                textStyle: {color: '#FFF'},
+                titleTextStyle: {color: 'white', fontSize: 9},
+                backgroundColor: '#373737',
                 hAxis: {
-         baselineColor: '#ccc',
-         gridlineColor: '#ccc',//textPosition: 'none',
-                textStyle:{color: '#FFF'}},
+                    baselineColor: '#ccc',
+                    gridlineColor: '#ccc',//textPosition: 'none',
+                    textStyle: {color: '#FFF'}
+                },
                 vAxis: {
-                     baselineColor: '#ccc',
-         gridlineColor: '#ccc',
-                    gridlines: { count:5 },
-                textStyle:{color: '#FFF'},
+                    baselineColor: '#ccc',
+                    gridlineColor: '#ccc',
+                    gridlines: {count: 5},
+                    textStyle: {color: '#FFF'},
                 },
                 is3D: true,
-              titleTextStyle: {
-        //color: <string>,    // any HTML string color ('red', '#cc00cc')
-       // fontName: <string>, // i.e. 'Times New Roman'
-        fontSize: 12, // 12, 18 whatever you want (don't specify px)
-        bold: true,    
-        // true or false
-        //italic: <boolean>   // true of false
-    },
-    titlePosition: 'out'
-      };
-      var chart = new google.visualization.LineChart(document.getElementById('Bz_chart'));
-      chart.draw(data, options);
-    }
-//
-function drawBasic2(arr) {
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'D');
-      data.addColumn('number', 'density [#/cc]');
-      data.addColumn('number', 'speed [km/s]');
-      data.addRows(arr);
-      var options = {lineWidth: 1,
-             colors: ['red','green'],
-             bar: {groupWidth: '95%'},
-             legend: {position: 'top',textStyle: {color: '#F5F5F7'}},
-             //legend: 'none',
-           // title: 'Density',
-            textStyle:{color: '#FFF'},
-            titleTextStyle : {color: 'white', fontSize: 9},
-           backgroundColor: '#373737',
-           series: {
-          0: {targetAxisIndex: 0, axis: 'density'},
-          1: {targetAxisIndex: 1, axis: 'speed'}
-        },
-        axes: {
-          y: {
-            density: {label: 'Temps (Ceffflsius)'},
-            speed: {label: 'Daylight'}
-          }
-        },
-        hAxis: {
-         baselineColor: '#ccc',
-         gridlineColor: '#ccc',//textPosition: 'none',
-                textStyle:{color: '#FFF'}},
+                titleTextStyle: {
+                    //color: <string>,    // any HTML string color ('red', '#cc00cc')
+                    // fontName: <string>, // i.e. 'Times New Roman'
+                    fontSize: 12, // 12, 18 whatever you want (don't specify px)
+                    bold: true,
+                    // true or false
+                    //italic: <boolean>   // true of false
+                },
+                titlePosition: 'out'
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('Bz_chart'));
+            chart.draw(data, options);
+        }
+
+        //
+        function drawBasic2(arr) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'D');
+            data.addColumn('number', 'density [#/cc]');
+            data.addColumn('number', 'speed [km/s]');
+            data.addRows(arr);
+            var options = {
+                lineWidth: 1,
+                colors: ['red', 'green'],
+                bar: {groupWidth: '95%'},
+                legend: {position: 'top', textStyle: {color: '#F5F5F7'}},
+                //legend: 'none',
+                // title: 'Density',
+                textStyle: {color: '#FFF'},
+                titleTextStyle: {color: 'white', fontSize: 9},
+                backgroundColor: '#373737',
+                series: {
+                    0: {targetAxisIndex: 0, axis: 'density'},
+                    1: {targetAxisIndex: 1, axis: 'speed'}
+                },
+                axes: {
+                    y: {
+                        density: {label: 'Temps (Ceffflsius)'},
+                        speed: {label: 'Daylight'}
+                    }
+                },
+                hAxis: {
+                    baselineColor: '#ccc',
+                    gridlineColor: '#ccc',//textPosition: 'none',
+                    textStyle: {color: '#FFF'}
+                },
                 vAxis: {
-                              0: {label: 'Temps (Celsius)'},
-          speed: {title: 'Daylight'},
-                     baselineColor: '#ccc',
-         gridlineColor: '#ccc',
-                    gridlines: { count:5 },
-                textStyle:{color: '#FFF'},
+                    0: {label: 'Temps (Celsius)'},
+                    speed: {title: 'Daylight'},
+                    baselineColor: '#ccc',
+                    gridlineColor: '#ccc',
+                    gridlines: {count: 5},
+                    textStyle: {color: '#FFF'},
                 },
 
                 is3D: true
-      };
-      var chart = new google.visualization.LineChart(document.getElementById('Solar_chart'));
-      chart.draw(data, options);
-}
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('Solar_chart'));
+            chart.draw(data, options);
+        }
 
-function drawBasic3(arr) {
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'D');
-      data.addColumn('number', 'NorthHPI');
-      data.addColumn('number', 'SouthHPI');
-      data.addRows(arr);
-      var options = {lineWidth: 1,
-             colors: ['#CC9900','#FF6600'],
-             bar: {groupWidth: '95%'},
-            legend: {position: 'top',textStyle: {color: '#F5F5F7'}},
-             //legend: 'none',
-            //title: 'HPI',
-            textStyle:{color: '#FFF'},
-            titleTextStyle : {color: 'white', fontSize: 9},
-           backgroundColor: '#373737',
+        function drawBasic3(arr) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'D');
+            data.addColumn('number', 'NorthHPI');
+            data.addColumn('number', 'SouthHPI');
+            data.addRows(arr);
+            var options = {
+                lineWidth: 1,
+                colors: ['#CC9900', '#FF6600'],
+                bar: {groupWidth: '95%'},
+                legend: {position: 'top', textStyle: {color: '#F5F5F7'}},
+                //legend: 'none',
+                //title: 'HPI',
+                textStyle: {color: '#FFF'},
+                titleTextStyle: {color: 'white', fontSize: 9},
+                backgroundColor: '#373737',
                 hAxis: {
-         baselineColor: '#ccc',
-         gridlineColor: '#ccc',//textPosition: 'none',
-                textStyle:{color: '#FFF'}},
-                vAxis: {
-                     baselineColor: '#ccc',
-         gridlineColor: '#ccc',
-                    gridlines: { count:5 },
-                textStyle:{color: '#FFF'},
+                    baselineColor: '#ccc',
+                    gridlineColor: '#ccc',//textPosition: 'none',
+                    textStyle: {color: '#FFF'}
                 },
-                is3D: true};
-      var chart = new google.visualization.LineChart(document.getElementById('HPI_chart'));
-      chart.draw(data, options);
-}
+                vAxis: {
+                    baselineColor: '#ccc',
+                    gridlineColor: '#ccc',
+                    gridlines: {count: 5},
+                    textStyle: {color: '#FFF'},
+                },
+                is3D: true
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('HPI_chart'));
+            chart.draw(data, options);
+        }
 
-async function getdatafromsand(url){
-    let response = await fetch(url);
-    if (response.ok) { 
-        let txt = await response.json();
-        let arr = [];
-        var date = new Date(); 
-        var now_utc =  Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
-         date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-        var tutc=moment.utc(date);
-        $(function () {
-            $('#datetimepicker1').datetimepicker({
+        async function getdatafromsand(url) {
+            let response = await fetch(url);
+            if (response.ok) {
+                let txt = await response.json();
+                let arr = [];
+                var date = new Date();
+                var now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+                    date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+                var tutc = moment.utc(date);
+                $(function () {
+                    $('#datetimepicker1').datetimepicker({
                         locale: 'ru',
                         enabledDates: txt,
                         defaultDate: tutc,
@@ -511,498 +584,515 @@ async function getdatafromsand(url){
                         format: 'L',
                         ignoreReadonly: true
                     });
-            });
-                
-        $(function () {
-            $('#datetimepicker2').datetimepicker({
-                locale: 'ru',
-                defaultDate: tutc,
-                format: 'HH:mm',
-                format: 'LT',
-                ignoreReadonly: true
-            });
-        });
-            
-        $('#datetimepicker1').on('change.datetimepicker', function(e) {
-        
-        });
-   }
-    else {
-      alert("Ошибка HTTP: " + response.status);
-    } 
-}
+                });
 
-getdatafromsand('http://gimslaw8.bget.ru/sand');
-getdatafromoutside('https://services.swpc.noaa.gov/products/solar-wind/mag-6-hour.json');
-getdatafromoutsideSolar('https://services.swpc.noaa.gov/products/solar-wind/plasma-6-hour.json');
-getdatafromyd();
-var x = foo();
+                $(function () {
+                    $('#datetimepicker2').datetimepicker({
+                        locale: 'ru',
+                        defaultDate: tutc,
+                        format: 'HH:mm',
+                        format: 'LT',
+                        ignoreReadonly: true
+                    });
+                });
 
-//getdata('http://gimslaw8.bget.ru/data?tmstp='+x);
-//drawglobe("http://gimslaw8.bget.ru/test?tmstp="+x);
-alert("http://gimslaw8.bget.ru/weimer?tmstp="+x);
-drawglobe("http://gimslaw8.bget.ru/weimer?tmstp="+x,'w');
+                $('#datetimepicker1').on('change.datetimepicker', function (e) {
 
-function drawglobe(url1, tip){
-var activeWidget = null;
-const url =  "http://gimslaw8.bget.ru/static/files/aurora_ext.csv";
-require(["esri/Map", 
-"esri/views/SceneView",
-"esri/layers/CSVLayer",
-"esri/layers/GeoJSONLayer",
-"esri/renderers/UniqueValueRenderer",
-"esri/widgets/Legend",
-"esri/core/watchUtils",
-"esri/TimeExtent",
-"esri/widgets/Expand",
-"esri/widgets/BasemapGallery",
-"esri/widgets/Search",
-"esri/widgets/support/DatePicker",
-"esri/widgets/Zoom","esri/widgets/AreaMeasurement3D",
-"esri/widgets/DirectLineMeasurement3D"], 
-function(Map, SceneView, CSVLayer, GeoJSONLayer, UniqueValueRenderer,Legend,watchUtils,TimeExtent,Expand,BasemapGallery,Search,DatePicker,Zoom,AreaMeasurement3D, DirectLineMeasurement3D) {
-    const template = {
-    title: "",
-    content: "Intensivity {category} latitude {latitude} longitude {longitude}."
-    };
-    
-    const map = new Map({
-        basemap: "oceans",
-        ground: "world-elevation",
-        maxZoom: 5,
-        effectiveMaxZoom:5,
-        effectiveMinZoom:5,
-        minZoom: 5,
-        maxScale: 5000000
-    });
-    
-    var renderer = {
-    type: "unique-value",  
-    defaultSymbol: { type: "line-3d",
-    symbolLayers: [{
-        type: "line", 
-        outline: { color: [255, 84, 54, 0.6], size: 10, width: 2},
-        join: "round"
-    }]},
-    
-    visualVariables: [
-        {
-            type: "size",
-            field: "title",
-            stops: [
-                { value: 4, size: 1},
-                { value: 100, size: 1}
-            ]
-        }, 
-        {
-            type: "color", 
-            field: "title", 
-            legendOptions: {
-            title: "Probability"
-            },
-            //#5813fc,#1cc2fd,#7dfd94,#f5c926,#ff2b18
-            stops: [
-                {
-                    value: -60, 
-                    color: "#5813fc", 
-                    label: "0", 
-                },
-                {
-                    value: -30, 
-                    color: "#1cc2fd",
-                },  
-                {
-                    value: 30, 
-                    color: "#7dfd94", 
-                },        
-                {
-                    value: 60, 
-                    color: "#f5c926", 
-                },
-                {
-                    value: 100, 
-                    color: "#ff2b18", 
-                    label: " 100", 
-                }        
-            ]
-        
-        }
-    ]
-    };
-    var popupTemplate = {
-        title: "Aurora Probability",
-        content: "{title}"
-    };
-    
-    const geoJSONLayer = new GeoJSONLayer({
-        url: url1, 
-        popupEnabled: true,
-        outFields: ["title"],
-        popupTemplate: popupTemplate,
-        renderer: renderer,
-        highlightOptions: {
-            haloOpacity: 0.9,
-            fillOpacity: 0.2
-        },
-        elevationInfo:{
-            mode:'relative-to-scene'
-        }
-    });
-    geoJSONLayer.opacity = 1;
-
-    map.add(geoJSONLayer);
-   // console.log(geoJSONLayer);
-   // console.log('1');
-    view = new SceneView({
-    container: "viewDiv",
-    map: map,
-    scale: 60000000,
-    minScale:30000000,
-    center: [-101.17, 21.78],
-    qualityProfile: "high",
-    alphaCompositingEnabled: false,
-    environment: {
-        lighting: {
-            cameraTrackingEnabled: false
-        },
-        waterReflectionEnabled: true,
-        starsEnabled: true,
-        atmosphereEnabled: true,
-        atmosphere: {
-            quality: "high"
-        },
-    }
-    });
-
-    var legend = new Legend({
-    view: view,
-    container: leg,
-    title: "Aurora Probability",
-    layerInfos: [{
-        layer: geoJSONLayer
-    }]
-    });
-
-    view.ui.components =[""];
-
-    view.ui.add(legend, "top-right");
-    view.popup.dockOptions.buttonEnabled = false;  
-    view.popup.viewModel.actions = [];
-
-     document.getElementById("zoom").innerHTML="";
-     document.getElementById("search").innerHTML="";
-     searchWidget= "";
-     zoom = new Zoom({   view: view,   layout: "horizontal", container: "zoom"});
-     searchWidget = new Search({
-          view: view,
-          container: search
-     });
-
-        document
-          .getElementById("areaButton")
-          .addEventListener("click", function() {
-            setActiveWidget(null);
-            if (!this.classList.contains("activee")) {
-              setActiveWidget("area");
+                });
             } else {
-              setActiveButton(null);
+                alert("Ошибка HTTP: " + response.status);
             }
-          });
-          
-                  document
-          .getElementById("distanceButton")
-          .addEventListener("click", function() {
-            setActiveWidget(null);
-            if (!this.classList.contains("activee")) {
-              setActiveWidget("distance");
-            } else {
-              setActiveButton(null);
-            }
-          });
-
-    view.when(function() {
-        setTimeout(function(){
-        }, 5010);
-        const camera = view.camera.clone();
-        camera.position.latitude = 90;
-        view.goTo(camera, { duration:5000,});
-        document.getElementById("loader1").style.visibility= 'hidden';
-    });
-    
-        function setActiveWidget(type) {
-          switch (type) {
-            case "distance":
-              activeWidget = new DirectLineMeasurement3D({
-                view: view
-              });
-
-              // skip the initial 'new measurement' button
-              activeWidget.viewModel.newMeasurement();
-
-              view.ui.add(activeWidget, "middle");
-              setActiveButton(document.getElementById("distanceButton"));
-              break;
-            case "area":
-              activeWidget = new AreaMeasurement3D({
-                view: view
-              });
-
-              // skip the initial 'new measurement' button
-              activeWidget.viewModel.newMeasurement();
-
-              view.ui.add(activeWidget, "middle");
-              setActiveButton(document.getElementById("areaButton"));
-              break;
-            case null:
-              if (activeWidget) {
-                view.ui.remove(activeWidget);
-                activeWidget.destroy();
-                activeWidget = null;
-              }
-              break;
-          }
         }
-        
-        ///
 
-document
-          .getElementById("Home")
-          .addEventListener("click", function() {
- //
- 
-         const camera = view.camera.clone();
-        camera.position.latitude = 90;
-        camera.position.lontitude = 0;camera.position.z=17701447.44765657;
-        view.goTo(camera, { duration:5000,});
-          });        
-        
-document
-          .getElementById("Northern Hemisphere")
-          .addEventListener("click", function() {
- //
- 
-         const camera = view.camera.clone();
-        camera.position.latitude = 90;
-        camera.position.lontitude = 0;camera.position.z=17701447.44765657;
-        view.goTo(camera, { duration:5000,});
-          });        
-          
-          document
-          .getElementById("Southern Hemisphere")
-          .addEventListener("click", function() {
- //
-         const camera = view.camera.clone();//alert(camera.position.z);
-        camera.position.latitude = -90;
-        camera.position.lontitude = 0;
-        camera.position.z=17701447.44765657;
-        view.goTo(camera, { duration:5000,});
-          });  
-        //
+        getdatafromsand('http://gimslaw8.bget.ru/sand');
+        getdatafromoutside('https://services.swpc.noaa.gov/products/solar-wind/mag-6-hour.json');
+        getdatafromoutsideSolar('https://services.swpc.noaa.gov/products/solar-wind/plasma-6-hour.json');
+        getdatafromyd();
+        var x = foo();
 
-});
-}
-function foo(){
-    var date_to_parse = $('#datetimepicker1').datetimepicker('viewDate');
-    var date = moment(date_to_parse).format('YYYY-MM-DD');
-    var time_to_parse = $('#datetimepicker2').datetimepicker('viewDate');
-    var time = moment.utc(time_to_parse).format('HH:mm');
-    alert($('#tip').prop('checked')+'ggg');
-    if($('#tip').prop('checked')!=true){alert('ff');
-    var tmp = moment( date +" " +time).subtract(5, 'minutes');
-    date = tmp.format('YYYY-MM-DD');
-    time = tmp.format('HH:mm');        
-    }
-    return date+'-'+time;
-}
+        //getdata('http://gimslaw8.bget.ru/data?tmstp='+x);
+        //drawglobe("http://gimslaw8.bget.ru/test?tmstp="+x);
+        alert("http://gimslaw8.bget.ru/weimer?tmstp=" + x);
+        drawglobe("http://gimslaw8.bget.ru/weimer?tmstp=" + x, 'w');
 
-function refresh(){
-    document.getElementById("loader1").style.visibility= 'visible';
-    //var date_to_parse = $('#datetimepicker1').datetimepicker('viewDate');
-    //var date = moment(date_to_parse).format('YYYY-MM-DD');
-    //var time_to_parse = $('#datetimepicker2').datetimepicker('viewDate');
-    //var time = moment(time_to_parse).format('HH:mm');
-    //var xx = date+'-'+time;//2021-01-08-05:21
-    var xx = foo();
-    var formats = ["YYYY-MM-DD-HH:mm"];
-    if($('#tip').prop('checked')!=true){
-        document.getElementById("viewDiv").innerHTML="";
-        document.getElementById("zoom").innerHTML="";
-         document.getElementById("search").innerHTML="";
-         drawglobe("http://gimslaw8.bget.ru/test?tmstp="+xx,'w');
-    }
-    else{
-        drawglobe("http://gimslaw8.bget.ru/test?tmstp="+xx,'o');
-    }
-    
-    //var check = moment(xx,formats, true).isValid(); 
-   // alert(check);
-   // drawglobe("http://gimslaw8.bget.ru/test?tmstp="+xx);
-    //getdata('http://gimslaw8.bget.ru/data?tmstp='+xx);
-}
-</script>
+        function drawglobe(url1, tip) {
+            var activeWidget = null;
+            const url = "http://gimslaw8.bget.ru/static/files/aurora_ext.csv";
+            require(["esri/Map",
+                    "esri/views/SceneView",
+                    "esri/layers/CSVLayer",
+                    "esri/layers/GeoJSONLayer",
+                    "esri/renderers/UniqueValueRenderer",
+                    "esri/widgets/Legend",
+                    "esri/core/watchUtils",
+                    "esri/TimeExtent",
+                    "esri/widgets/Expand",
+                    "esri/widgets/BasemapGallery",
+                    "esri/widgets/Search",
+                    "esri/widgets/support/DatePicker",
+                    "esri/widgets/Zoom", "esri/widgets/AreaMeasurement3D",
+                    "esri/widgets/DirectLineMeasurement3D"],
+                function (Map, SceneView, CSVLayer, GeoJSONLayer, UniqueValueRenderer, Legend, watchUtils, TimeExtent, Expand, BasemapGallery, Search, DatePicker, Zoom, AreaMeasurement3D, DirectLineMeasurement3D) {
+                    const template = {
+                        title: "",
+                        content: "Intensivity {category} latitude {latitude} longitude {longitude}."
+                    };
+
+                    const map = new Map({
+                        basemap: "oceans",
+                        ground: "world-elevation",
+                        maxZoom: 5,
+                        effectiveMaxZoom: 5,
+                        effectiveMinZoom: 5,
+                        minZoom: 5,
+                        maxScale: 5000000
+                    });
+
+                    var renderer = {
+                        type: "unique-value",
+                        defaultSymbol: {
+                            type: "line-3d",
+                            symbolLayers: [{
+                                type: "line",
+                                outline: {color: [255, 84, 54, 0.6], size: 10, width: 2},
+                                join: "round"
+                            }]
+                        },
+
+                        visualVariables: [
+                            {
+                                type: "size",
+                                field: "title",
+                                stops: [
+                                    {value: 4, size: 1},
+                                    {value: 100, size: 1}
+                                ]
+                            },
+                            {
+                                type: "color",
+                                field: "title",
+                                legendOptions: {
+                                    title: "Probability"
+                                },
+                                //#5813fc,#1cc2fd,#7dfd94,#f5c926,#ff2b18
+                                stops: [
+                                    {
+                                        value: -60,
+                                        color: "#5813fc",
+                                        label: "0",
+                                    },
+                                    {
+                                        value: -30,
+                                        color: "#1cc2fd",
+                                    },
+                                    {
+                                        value: 30,
+                                        color: "#7dfd94",
+                                    },
+                                    {
+                                        value: 60,
+                                        color: "#f5c926",
+                                    },
+                                    {
+                                        value: 100,
+                                        color: "#ff2b18",
+                                        label: " 100",
+                                    }
+                                ]
+
+                            }
+                        ]
+                    };
+                    var popupTemplate = {
+                        title: "Aurora Probability",
+                        content: "{title}"
+                    };
+
+                    const geoJSONLayer = new GeoJSONLayer({
+                        url: url1,
+                        popupEnabled: true,
+                        outFields: ["title"],
+                        popupTemplate: popupTemplate,
+                        renderer: renderer,
+                        highlightOptions: {
+                            haloOpacity: 0.9,
+                            fillOpacity: 0.2
+                        },
+                        elevationInfo: {
+                            mode: 'relative-to-scene'
+                        }
+                    });
+                    geoJSONLayer.opacity = 1;
+
+                    map.add(geoJSONLayer);
+                    // console.log(geoJSONLayer);
+                    // console.log('1');
+                    view = new SceneView({
+                        container: "viewDiv",
+                        map: map,
+                        scale: 60000000,
+                        minScale: 30000000,
+                        center: [-101.17, 21.78],
+                        qualityProfile: "high",
+                        alphaCompositingEnabled: false,
+                        environment: {
+                            lighting: {
+                                cameraTrackingEnabled: false
+                            },
+                            waterReflectionEnabled: true,
+                            starsEnabled: true,
+                            atmosphereEnabled: true,
+                            atmosphere: {
+                                quality: "high"
+                            },
+                        }
+                    });
+
+                    var legend = new Legend({
+                        view: view,
+                        container: leg,
+                        title: "Aurora Probability",
+                        layerInfos: [{
+                            layer: geoJSONLayer
+                        }]
+                    });
+
+                    view.ui.components = [""];
+
+                    view.ui.add(legend, "top-right");
+                    view.popup.dockOptions.buttonEnabled = false;
+                    view.popup.viewModel.actions = [];
+
+                    document.getElementById("zoom").innerHTML = "";
+                    document.getElementById("search").innerHTML = "";
+                    searchWidget = "";
+                    zoom = new Zoom({view: view, layout: "horizontal", container: "zoom"});
+                    searchWidget = new Search({
+                        view: view,
+                        container: search
+                    });
+
+                    document
+                        .getElementById("areaButton")
+                        .addEventListener("click", function () {
+                            setActiveWidget(null);
+                            if (!this.classList.contains("activee")) {
+                                setActiveWidget("area");
+                            } else {
+                                setActiveButton(null);
+                            }
+                        });
+
+                    document
+                        .getElementById("distanceButton")
+                        .addEventListener("click", function () {
+                            setActiveWidget(null);
+                            if (!this.classList.contains("activee")) {
+                                setActiveWidget("distance");
+                            } else {
+                                setActiveButton(null);
+                            }
+                        });
+
+                    view.when(function () {
+                        setTimeout(function () {
+                        }, 5010);
+                        const camera = view.camera.clone();
+                        camera.position.latitude = 90;
+                        view.goTo(camera, {duration: 5000,});
+                        document.getElementById("loader1").style.visibility = 'hidden';
+                    });
+
+                    function setActiveWidget(type) {
+                        switch (type) {
+                            case "distance":
+                                activeWidget = new DirectLineMeasurement3D({
+                                    view: view
+                                });
+
+                                // skip the initial 'new measurement' button
+                                activeWidget.viewModel.newMeasurement();
+
+                                view.ui.add(activeWidget, "middle");
+                                setActiveButton(document.getElementById("distanceButton"));
+                                break;
+                            case "area":
+                                activeWidget = new AreaMeasurement3D({
+                                    view: view
+                                });
+
+                                // skip the initial 'new measurement' button
+                                activeWidget.viewModel.newMeasurement();
+
+                                view.ui.add(activeWidget, "middle");
+                                setActiveButton(document.getElementById("areaButton"));
+                                break;
+                            case null:
+                                if (activeWidget) {
+                                    view.ui.remove(activeWidget);
+                                    activeWidget.destroy();
+                                    activeWidget = null;
+                                }
+                                break;
+                        }
+                    }
+
+                    ///
+
+                    document
+                        .getElementById("Home")
+                        .addEventListener("click", function () {
+                            //
+
+                            const camera = view.camera.clone();
+                            camera.position.latitude = 90;
+                            camera.position.lontitude = 0;
+                            camera.position.z = 17701447.44765657;
+                            view.goTo(camera, {duration: 5000,});
+                        });
+
+                    document
+                        .getElementById("Northern Hemisphere")
+                        .addEventListener("click", function () {
+                            //
+
+                            const camera = view.camera.clone();
+                            camera.position.latitude = 90;
+                            camera.position.lontitude = 0;
+                            camera.position.z = 17701447.44765657;
+                            view.goTo(camera, {duration: 5000,});
+                        });
+
+                    document
+                        .getElementById("Southern Hemisphere")
+                        .addEventListener("click", function () {
+                            //
+                            const camera = view.camera.clone();//alert(camera.position.z);
+                            camera.position.latitude = -90;
+                            camera.position.lontitude = 0;
+                            camera.position.z = 17701447.44765657;
+                            view.goTo(camera, {duration: 5000,});
+                        });
+                    //
+
+                });
+        }
+
+        function foo() {
+            var date_to_parse = $('#datetimepicker1').datetimepicker('viewDate');
+            var date = moment(date_to_parse).format('YYYY-MM-DD');
+            var time_to_parse = $('#datetimepicker2').datetimepicker('viewDate');
+            var time = moment.utc(time_to_parse).format('HH:mm');
+            alert($('#tip').prop('checked') + 'ggg');
+            if ($('#tip').prop('checked') != true) {
+                alert('ff');
+                var tmp = moment(date + " " + time).subtract(5, 'minutes');
+                date = tmp.format('YYYY-MM-DD');
+                time = tmp.format('HH:mm');
+            }
+            return date + '-' + time;
+        }
+
+        function refresh() {
+            document.getElementById("loader1").style.visibility = 'visible';
+            //var date_to_parse = $('#datetimepicker1').datetimepicker('viewDate');
+            //var date = moment(date_to_parse).format('YYYY-MM-DD');
+            //var time_to_parse = $('#datetimepicker2').datetimepicker('viewDate');
+            //var time = moment(time_to_parse).format('HH:mm');
+            //var xx = date+'-'+time;//2021-01-08-05:21
+            var xx = foo();
+            var formats = ["YYYY-MM-DD-HH:mm"];
+            if ($('#tip').prop('checked') != true) {
+                document.getElementById("viewDiv").innerHTML = "";
+                document.getElementById("zoom").innerHTML = "";
+                document.getElementById("search").innerHTML = "";
+                drawglobe("http://gimslaw8.bget.ru/test?tmstp=" + xx, 'w');
+            } else {
+                drawglobe("http://gimslaw8.bget.ru/test?tmstp=" + xx, 'o');
+            }
+
+            //var check = moment(xx,formats, true).isValid();
+            // alert(check);
+            // drawglobe("http://gimslaw8.bget.ru/test?tmstp="+xx);
+            //getdata('http://gimslaw8.bget.ru/data?tmstp='+xx);
+        }
+    </script>
 </head>
 
 
-<body>      
-    <header>
-        <div class="flex-container">
-            <div style="width:200px " class="column">
-                <Label style="margin-top:10px; float:left;color:#F5F5F7">Date:&nbsp;</Label> 
-                <div class="input-group date" id="datetimepicker1" data-target-input="nearest" style="width:150px;display:flex;">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" style="background-color:#4a4a4a;color:#e8e8e8" readonly="readonly"/>
-                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker" style="padding-top:0px">
-                        <div class="input-group-text" style="line-height:1;background-color:#4a4a4a;color:#e8e8e8"><i class="fa fa-calendar"></i></div>
-                    </div>
-                </div>  
-            </div>  
-            <div style="width:120px; margin-left:10px" class="column">
-                <Label style="margin-top:10px; float:left;color:#F5F5F7">Time (UT):&nbsp;</Label> 
-                <div class="input-group date" id="datetimepicker2" data-target-input="nearest" style="width:110px;display:flex">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2" style="background-color:#4a4a4a;color:#e8e8e8"  readonly="readonly"/>
-                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker" style="padding-top:0px">
-                        <div class="input-group-text" style="line-height:1;background-color:#4a4a4a;color:#e8e8e8"><i class="fa fa-clock-o"></i></div>
-                    </div>
-                </div>  
-            </div> 
-            <div id="check" class="flex-container" style="width:200px">
-                <div class="column" style="width:25px">
-                    <button class="btn-primary btn" id="draw" onclick="refresh()" style="color: #e6e6e6; background-color: #1d4a71; border-color: #4d79a0;">
-                        <i class="fas fa-globe"></i>&nbsp;Plot
-                    </button>
-                </div> 
-                
-                <div id="search" class="column esri-component esri-search esri-widget" style="height:37px; width: 800px; margin-left: 70px; margin-top:1px; border: 1px solid transparent; border-radius: 4px; background-color:#4a4a4a;color:white!important; border-color:#ccc!important"></div>
-                <div id="zoom" class="column esri-component esri-search esri-widget" style="height:37px; width:400px; margin-left: 10px; margin-top:1px;     border: 1px solid transparent; border-radius: 4px;background-color:#4a4a4a;color:#e8e8e8;border-color:#ccc!important"></div>
+<body>
+<header>
+    <div class="flex-container">
+        <div style="width:200px " class="column">
+            <Label style="margin-top:10px; float:left;color:#F5F5F7">Date:&nbsp;</Label>
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest"
+                 style="width:150px;display:flex;">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"
+                       style="background-color:#4a4a4a;color:#e8e8e8" readonly="readonly"/>
+                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker"
+                     style="padding-top:0px">
+                    <div class="input-group-text" style="line-height:1;background-color:#4a4a4a;color:#e8e8e8"><i
+                            class="fa fa-calendar"></i></div>
+                </div>
             </div>
         </div>
-        
-        <div style="margin-top:10px;  height: 20px; background-color: #595f60; color:rgba(255,255,255, 0.6); font-size: 10px;margin-bottom:-10px; margin-left:-8px;margin-right:-8px">
-            <div class="container" style="width:100%">
-                <div class="row">
-                    <div class="col-sm">
-                        <div style="border-right: 1px solid rgba(255,255,255, 0.6); height:20px">
+        <div style="width:120px; margin-left:10px" class="column">
+            <Label style="margin-top:10px; float:left;color:#F5F5F7">Time (UT):&nbsp;</Label>
+            <div class="input-group date" id="datetimepicker2" data-target-input="nearest"
+                 style="width:110px;display:flex">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2"
+                       style="background-color:#4a4a4a;color:#e8e8e8" readonly="readonly"/>
+                <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker"
+                     style="padding-top:0px">
+                    <div class="input-group-text" style="line-height:1;background-color:#4a4a4a;color:#e8e8e8"><i
+                            class="fa fa-clock-o"></i></div>
+                </div>
+            </div>
+        </div>
+        <div id="check" class="flex-container" style="width:200px">
+            <div class="column" style="width:25px">
+                <button class="btn-primary btn" id="draw" onclick="refresh()"
+                        style="color: #e6e6e6; background-color: #1d4a71; border-color: #4d79a0;">
+                    <i class="fas fa-globe"></i>&nbsp;Plot
+                </button>
+            </div>
+
+            <div id="search" class="column esri-component esri-search esri-widget"
+                 style="height:37px; width: 800px; margin-left: 70px; margin-top:1px; border: 1px solid transparent; border-radius: 4px; background-color:#4a4a4a;color:white!important; border-color:#ccc!important"></div>
+            <div id="zoom" class="column esri-component esri-search esri-widget"
+                 style="height:37px; width:400px; margin-left: 10px; margin-top:1px;     border: 1px solid transparent; border-radius: 4px;background-color:#4a4a4a;color:#e8e8e8;border-color:#ccc!important"></div>
+        </div>
+    </div>
+
+    <div style="margin-top:10px;  height: 20px; background-color: #595f60; color:rgba(255,255,255, 0.6); font-size: 10px;margin-bottom:-10px; margin-left:-8px;margin-right:-8px">
+        <div class="container" style="width:100%">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="border-right: 1px solid rgba(255,255,255, 0.6); height:20px">
                         <!--Hemispheric Power (GW): &nbsp;-->
                         NorthHPI &nbsp;<span id="NorthHPI" style="color:#CC9900">-</span> &nbsp;
                         SouthHPI &nbsp;<span id="SouthHPI" style="color:#FF6600">-</span>
-                        </div>
                     </div>
-                    <div class="col-sm">
-                        <div style="border-right: 1px solid rgba(255,255,255, 0.6); height:20px">
+                </div>
+                <div class="col-sm">
+                    <div style="border-right: 1px solid rgba(255,255,255, 0.6); height:20px">
                         Solar Wind: &nbsp;
                         <span id="density" style="color:red">n/a</span><span style="color:red">&nbsp;#/cc &nbsp;</span>
                         <span id="speed" style="color:#6df3a5">n/a</span><span style="color:#6df3a5">&nbsp;km/s</span>
-                        </div>
                     </div>
-                    <div class="col-sm">
-                        <div style="height:20px;width:600px;padding-right:-100px; ">
+                </div>
+                <div class="col-sm">
+                    <div style="height:20px;width:600px;padding-right:-100px; ">
                         Interplanetary Magnetic Field (GSM Coordinates) &nbsp;
                         <span id="Bx" style="color:#CC9900">n/a</span><span style="color:#CC9900">&nbsp;nT &nbsp;</span>
                         <span id="By" style="color:#FF6600">n/a</span><span style="color:#FF6600">&nbsp;nT &nbsp;</span>
                         <span id="Bz" style="color:#CC0000">n/a</span><span style="color:#CC0000">&nbsp;nT &nbsp;</span>
                         <span id="Lat">n/a</span>&nbsp;&deg;&nbsp;
                         <span id="Long">n/a</span>&nbsp;&deg;
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
-      
-    <div class="row vh-100" style="z-index:1000; ">
-        
-        <div class="col-4 col-md-3">
-            <div id="Bz_chart" style="">
-                
-            </div>
-            <div id="Solar_chart" style="">
-                111
-            </div>
-            <div id="HPI_chart" style="">
-                111
-            </div> 
-      </div>
-    <div  id="viewDiv" class="viewDiv" style="width:74.3%; float:right; height:609px">&nbsp;</div>
+    </div>
+</header>
+
+<div class="row vh-100" style="z-index:1000; ">
+
+    <div class="col-4 col-md-3">
+        <div id="Bz_chart" style="">
+
+        </div>
+        <div id="Solar_chart" style="">
+            111
+        </div>
+        <div id="HPI_chart" style="">
+            111
+        </div>
+    </div>
+    <div id="viewDiv" class="viewDiv" style="width:74.3%; float:right; height:609px">&nbsp;</div>
     <div id="loader1" style="position:absolute;z-index:1000; top:50%; left:50%; ">
         <div class="spinner-border">
         </div>
     </div>
     <div id="infoDiv">
-       
-    
-    
+
+
     </div>
-<div id="leg" class="esri-component esri-legend esri-widget esri-widget--panel" style="position:absolute;z-index:10001; top: -7px; right:-10px; height:1000000px!important">
-    &nbsp;
-</div>
+    <div id="leg" class="esri-component esri-legend esri-widget esri-widget--panel"
+         style="position:absolute;z-index:10001; top: -7px; right:-10px; height:1000000px!important">
+        &nbsp;
+    </div>
 
 
     <div style="position:absolute;z-index:10001; top: 20px; right:5px;">
         <button
-        class="action-button esri-icon-measure-line"
-        id="distanceButton"
-        type="button"
-        title="Measure distance between two points"
-      ></button>
-      <button
-        class="action-button esri-icon-measure-area"
-        id="areaButton"
-        type="button"
-        title="Measure area"
-      ></button>
+                class="action-button esri-icon-measure-line"
+                id="distanceButton"
+                type="button"
+                title="Measure distance between two points"
+        ></button>
+        <button
+                class="action-button esri-icon-measure-area"
+                id="areaButton"
+                type="button"
+                title="Measure area"
+        ></button>
     </div>
     <div style="position:absolute;z-index:10001; top: 13px; left:20px;">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="background-color:transparent;border: none;">
-<a href=""><i class="fas fa-info-circle fa-2x" style="color: yellow;"></i></a>
-</button>
-      <!--  <a href=""><i class="fas fa-info-circle fa-2x" style="color: yellow;"></i></a> -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                style="background-color:transparent;border: none;">
+            <a href=""><i class="fas fa-info-circle fa-2x" style="color: yellow;"></i></a>
+        </button>
+        <!--  <a href=""><i class="fas fa-info-circle fa-2x" style="color: yellow;"></i></a> -->
     </div>
-    <div id = "parameters" style="display:none">
+    <div id="parameters" style="display:none">
     </div>
-  
-  <div class="custom-control custom-switch" style="position:absolute;z-index:10001; top: 15px; right:100px;color:#F5F5F7">
-<input id="tip" type="checkbox" checked data-toggle="toggle" data-size="xs" data-on="Ovation" data-off="Weimer"/>
-</div>
 
-        <div id="optionsDiv">
+    <div class="custom-control custom-switch"
+         style="position:absolute;z-index:10001; top: 15px; right:100px;color:#F5F5F7">
+        <input id="tip" type="checkbox" checked data-toggle="toggle" data-size="xs" data-on="Ovation"
+               data-off="Weimer"/>
+    </div>
+
+    <div id="optionsDiv">
         <button id="Home" class="nav_butt">Home</button>
         <button id="Northern Hemisphere" class="nav_butt">Northern Hemisphere</button>
         <button id="Southern Hemisphere" class="nav_butt">Southern Hemisphere</button>
     </div>
-    </div>
-    
+</div>
 
-    
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">About Aurora</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <h6>Разработчики:</h6>
-          <hr/>
-          <div class="container">
-  <div class="row">
-    <div class="col-sm">
-      <img src="http://gimslaw8.bget.ru/ugatu.png" style="width:80px"/>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">About Aurora</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Разработчики:</h6>
+                <hr/>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <img src="http://gimslaw8.bget.ru/ugatu.png" style="width:80px"/>
+                        </div>
+                        <div class="col-sm">
+                            <img src="http://gimslaw8.bget.ru/gc.jpeg" style="width:80px"/>
+                        </div>
+                        <div class="col-sm">
+                            <img src="http://gimslaw8.bget.ru/ifz-logo.png" style="width:80px"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-    <div class="col-sm">
-      <img src="http://gimslaw8.bget.ru/gc.jpeg" style="width:80px"/>
-    </div>
-    <div class="col-sm">
-     <img src="http://gimslaw8.bget.ru/ifz-logo.png" style="width:80px"/>
-    </div>
-  </div>
 </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-  </body>
+</body>
 </html>

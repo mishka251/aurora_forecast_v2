@@ -12,7 +12,7 @@ import geojsoncontour
 from matplotlib.ticker import MaxNLocator
 import csv
 from django.contrib.staticfiles import finders
-import json 
+import json
 import verde as vd
 from numpy import linspace
 
@@ -30,9 +30,11 @@ from datetime import datetime, timezone, timedelta
 def tester(request):
     return render(request, 'tester.html')
 
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
+
 
 def getauroradata(request):
     tmstpd = request.GET.get('tmstp')
@@ -42,32 +44,32 @@ def getauroradata(request):
     url2 = "https://services.swpc.noaa.gov/products/solar-wind/plasma-6-hour.json"
     aurora = urllib.request.urlopen(url).read()
     full_date = tmstpd
-    date_aurora = full_date[0:10]+' '+full_date[11:16]
-    date_hemi = full_date[0:10]+'_'+full_date[11:16]
+    date_aurora = full_date[0:10] + ' ' + full_date[11:16]
+    date_hemi = full_date[0:10] + '_' + full_date[11:16]
 
     NorthHPI = ''
-    SouthHPI= ''
+    SouthHPI = ''
     hemi = urllib.request.urlopen(hemip).read()
     hemi_arr = json.loads(hemi)
-    str_=''
-    
+    str_ = ''
+
     for index in range(len(hemi_arr)):
         if date_hemi in hemi_arr[index]:
             str_ = hemi_arr[index]
-        
-    if(str_==''):
-        str_ = hemi_arr[len(hemi_arr)-1]
+
+    if (str_ == ''):
+        str_ = hemi_arr[len(hemi_arr) - 1]
 
     str_ = ' '.join(str_.split())
     str_ = str_[17:]
     str_ = str_[17:]
-    str_  =str_.split()
+    str_ = str_.split()
     NorthHPI = str_[0]
-    SouthHPI=str_[1]
-    
+    SouthHPI = str_[1]
+
     mag = urllib.request.urlopen(url1).read()
     mag_ = json.loads(mag.decode())
-    m = len(mag_)-1
+    m = len(mag_) - 1
     bx_gsm = ''
     by_gsm = ''
     bz_gsm = ''
@@ -84,45 +86,44 @@ def getauroradata(request):
     lon_gsm = mag_[int(m)][4]
     lat_gsm = mag_[int(m)][5]
     bt = mag_[int(m)][6]
-   
 
     proton = urllib.request.urlopen(url2).read()
     proton_ = json.loads(proton.decode())
-    p = len(proton_)-1
+    p = len(proton_) - 1
     speed = ''
     density = ''
     for i in range(len(proton_)):
         if date_hemi in proton_[i][0]:
             p = i
-            break    
+            break
     density = proton_[int(p)][1]
     speed = proton_[int(p)][2]
-    
-    result = [NorthHPI,SouthHPI,bx_gsm,by_gsm,bz_gsm,lon_gsm,lat_gsm,speed,density]
+
+    result = [NorthHPI, SouthHPI, bx_gsm, by_gsm, bz_gsm, lon_gsm, lat_gsm, speed, density]
     return HttpResponse(json.dumps(result))
-    
+
 
 def test(request):
     tmstpd = request.GET.get('tmstp')
     mod = request.GET.get('mod')
     data_to_query = tmstpd
     just_date = tmstpd[0:10]
-    date1 = time.strptime(just_date, "%Y-%m-%d") 
-    date2 = time.strptime('2020-10-30', "%Y-%m-%d") 
-    if(mod=='w'):
-#
-        #url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp='+data_to_query
+    date1 = time.strptime(just_date, "%Y-%m-%d")
+    date2 = time.strptime('2020-10-30', "%Y-%m-%d")
+    if (mod == 'w'):
+        #
+        # url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp='+data_to_query
         url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp=2021-01-24-20:02'
         logo = urllib.request.urlopen(url).read();
         fff = logo;
         arr = [];
         for line in fff.decode().splitlines():
-            s=line.strip()
+            s = line.strip()
             arr.append(s)
-        j = json.loads(''.join(arr));    
+        j = json.loads(''.join(arr));
         arr1 = []
         data = j['coordinates']
-        for k in range(1,len(data)):
+        for k in range(1, len(data)):
             arr_ = []
             arr_.append(int(data[k][2]))
             arr_.append(float(data[k][1]))
@@ -131,9 +132,9 @@ def test(request):
         arr1 = np.array(arr1)
         d = arr1
         import matplotlib.tri as tri
-        z=d[:,0]
-        x=d[:,2]
-        y=d[:,1]
+        z = d[:, 0]
+        x = d[:, 2]
+        y = d[:, 1]
         xi = np.sort(np.unique(x))
         yi = np.sort(np.unique(y))
         from scipy.ndimage.filters import gaussian_filter
@@ -143,31 +144,31 @@ def test(request):
         zi = interpolator(Xi, Yi)
         zi = gaussian_filter(zi, sigma=.7)
         levels = len(np.unique(z))
-        contour = plt.contour(xi, yi, zi,levels=levels, cmap=plt.cm.jet,extend='both')#
+        contour = plt.contour(xi, yi, zi, levels=levels, cmap=plt.cm.jet, extend='both')  #
         geojson = geojsoncontour.contour_to_geojson(
             contour=contour,
             stroke_width=10
         )
-        return HttpResponse(geojson) 
+        return HttpResponse(geojson)
         ###
-#    
+    #
     else:
-        longi = [i*0.3515625-180 for i in range(1025)]
-        lati = [j*0.3515625-90 for j in range(513)]
+        longi = [i * 0.3515625 - 180 for i in range(1025)]
+        lati = [j * 0.3515625 - 90 for j in range(513)]
         ctr = 0
         ct = 0
-    #    data_to_query = tmstpd
-    #    just_date = tmstpd[0:10]
-    #    date1 = time.strptime(just_date, "%Y-%m-%d") 
-    #    date2 = time.strptime('2020-10-30', "%Y-%m-%d") 
+        #    data_to_query = tmstpd
+        #    just_date = tmstpd[0:10]
+        #    date1 = time.strptime(just_date, "%Y-%m-%d")
+        #    date2 = time.strptime('2020-10-30', "%Y-%m-%d")
         typ = 'new'
-        if(date1>=date2):
+        if (date1 >= date2):
             typ = 'new'
         else:
             typ = 'old'
-    
+
         if typ == 'new':
-            #return redirect('/getdata?type=aurora&dt='+data_to_query)
+            # return redirect('/getdata?type=aurora&dt='+data_to_query)
             # url = '/getdata?type=aurora&dt='+data_to_query
             # logo = urllib.request.urlopen(url).read();
             # fff = logo;
@@ -178,10 +179,10 @@ def test(request):
             # j = json.loads(''.join(arr));
             j = getdata('aurora', data_to_query)
             if j is None:
-                return JsonResponse({})
+                return JsonResponse(None, safe=False)
             arr1 = []
             data = j['coordinates']
-            for k in range(1,len(data)):
+            for k in range(1, len(data)):
                 arr_ = []
                 if (str(data[k][2]) != '0' and str(data[k][2]) != '1' and str(data[k][2]) != '2'):
                     arr_.append(int(data[k][2]))
@@ -191,9 +192,9 @@ def test(request):
             arr1 = np.array(arr1)
             d = arr1
             import matplotlib.tri as tri
-            z=d[:,0]
-            x=d[:,2]
-            y=d[:,1]
+            z = d[:, 0]
+            x = d[:, 2]
+            y = d[:, 1]
             xi = np.sort(np.unique(x))
             yi = np.sort(np.unique(y))
             from scipy.ndimage.filters import gaussian_filter
@@ -203,18 +204,18 @@ def test(request):
             zi = interpolator(Xi, Yi)
             zi = gaussian_filter(zi, sigma=.7)
             levels = len(np.unique(z))
-            contour = plt.contour(xi, yi, zi,levels=levels, cmap=plt.cm.jet,extend='both')#
+            contour = plt.contour(xi, yi, zi, levels=levels, cmap=plt.cm.jet, extend='both')  #
             geojson = geojsoncontour.contour_to_geojson(
                 contour=contour,
                 stroke_width=10
             )
-            return HttpResponse(geojson)   
-        
-        if typ=='old':
+            return HttpResponse(geojson)
+
+        if typ == 'old':
             logo = getdata('aurora', data_to_query)
             # url = '/getdata?type=aurora&dt='+data_to_query
             # logo = urllib.request.urlopen(url).read();
-            fff = logo;  
+            fff = logo;
             arr = [];
             for line in fff.splitlines():
                 if (ctr == 1025):
@@ -222,34 +223,34 @@ def test(request):
                     ct += 1
                 if '#' in line.decode():
                     continue
-                s=line.split()
-                for k in range(1,len(s),3):
-                    ciqw=0
-                    if ((s[k-1]) == '0' or (s[k-1]) == '1'  or (s[k-1]) == '2'):
+                s = line.split()
+                for k in range(1, len(s), 3):
+                    ciqw = 0
+                    if ((s[k - 1]) == '0' or (s[k - 1]) == '1' or (s[k - 1]) == '2'):
                         continue
                     arr_ = []
-                    arr_.append(float(s[k-1]))
+                    arr_.append(float(s[k - 1]))
                     arr_.append((lati[ct]))
-                    arr_.append((longi[k-1]))
+                    arr_.append((longi[k - 1]))
                     arr.append(arr_)
-                ct +=1  
+                ct += 1
             arr = np.array(arr)
-            contour_data = pd.DataFrame({'category': arr[..., 0], 'latitude': arr[..., 1],'longitude': arr[..., 2]})
+            contour_data = pd.DataFrame({'category': arr[..., 0], 'latitude': arr[..., 1], 'longitude': arr[..., 2]})
             Z = contour_data.pivot_table(index='longitude', columns='latitude', values='category').T.values
             X_unique = np.sort(contour_data['longitude'].unique())
             Y_unique = np.sort(contour_data['latitude'].unique())
             X, Y = np.meshgrid(X_unique, Y_unique)
-            n_contours = 50#contour_data['category'].nunique()#40
+            n_contours = 50  # contour_data['category'].nunique()#40
             levels = np.linspace(start=0, stop=100, num=n_contours)
-            contour = plt.contour(X, Y, Z,levels=levels, cmap=plt.cm.jet)
+            contour = plt.contour(X, Y, Z, levels=levels, cmap=plt.cm.jet)
             geojson = geojsoncontour.contour_to_geojson(
                 contour=contour,
                 min_angle_deg=1.0,
                 ndigits=1,
                 stroke_width=2,
             )
-            return HttpResponse(geojson)  
-        
+            return HttpResponse(geojson)
+
 
 def sand(request):
     tkn = 'AgAAAAAmPFRWAADLW8HrD162JU_KmQ71dAnQ6fA'
@@ -257,45 +258,46 @@ def sand(request):
     start_year = 2020
     today = datetime.today()
     years = [start_year]
-    start_year = start_year+1
-    while(start_year <= today.year):
+    start_year = start_year + 1
+    while (start_year <= today.year):
         years.append(start_year)
-        start_year = start_year+1
+        start_year = start_year + 1
     dates = []
     for year in years:
-        files = list(y.listdir("/Aurora-forecast/Power/"+str(year)))
+        files = list(y.listdir("/Aurora-forecast/Power/" + str(year)))
         for file in files:
-            name = file['path'] #a_pow_2020-08-15
+            name = file['path']  # a_pow_2020-08-15
             pos = int(name.find('a_pow_'))
-            date = name[pos+6:pos+16]
+            date = name[pos + 6:pos + 16]
             dates.append(date)
     for year in years:
-        files = list(y.listdir("/Aurora-forecast/Map/"+str(year)))
+        files = list(y.listdir("/Aurora-forecast/Map/" + str(year)))
         for file in files:
             name = file['path']
             dates.append(name[31:41])
     return HttpResponse(json.dumps(dates))
 
+
 def weimer(request):
     tmstpd = request.GET.get('tmstp')
     mod = request.GET.get('mod')
     data_to_query = tmstpd
-   # url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp=2015-03-17-23:15'
-    url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp='+data_to_query
+    # url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp=2015-03-17-23:15'
+    url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp=' + data_to_query
     logo = urllib.request.urlopen(url).read();
     fff = logo;
-    if(str(json.loads(fff))[2]=='e'):
+    if (str(json.loads(fff))[2] == 'e'):
         url = 'https://geomagnet.ru/weimer_api/?type=epot&tmstp=2021-02-01-05:21'
         logo = urllib.request.urlopen(url).read();
         fff = logo;
     arr = [];
     for line in fff.decode().splitlines():
-        s=line.strip()
+        s = line.strip()
         arr.append(s)
     j = json.loads(''.join(arr));
     arr1 = []
     data = j['coordinates']
-    for k in range(1,len(data)):
+    for k in range(1, len(data)):
         arr_ = []
         if (str(data[k][2]) != '0' and str(data[k][2]) != '1' and str(data[k][2]) != '2'):
             arr_.append(int(data[k][2]))
@@ -305,9 +307,9 @@ def weimer(request):
     arr1 = np.array(arr1)
     d = arr1
     import matplotlib.tri as tri
-    z=d[:,0]
-    x=d[:,2]
-    y=d[:,1]
+    z = d[:, 0]
+    x = d[:, 2]
+    y = d[:, 1]
     xi = np.sort(np.unique(x))
     yi = np.sort(np.unique(y))
     from scipy.ndimage.filters import gaussian_filter
@@ -316,8 +318,8 @@ def weimer(request):
     Xi, Yi = np.meshgrid(xi, yi)
     zi = interpolator(Xi, Yi)
     zi = gaussian_filter(zi, sigma=.7)
-    levels = 20#len(np.unique(z))
-    contour = plt.contour(xi, yi, zi,levels=levels, cmap=plt.cm.jet,extend='both')#
+    levels = 20  # len(np.unique(z))
+    contour = plt.contour(xi, yi, zi, levels=levels, cmap=plt.cm.jet, extend='both')  #
     geojson = geojsoncontour.contour_to_geojson(
         contour=contour,
         stroke_width=10
@@ -353,6 +355,7 @@ def get_another_from_yadisk(file_path):
             line = f.readline().strip()
 
     return json.loads('/n'.join(lines))
+
 
 def get_data_from_noaa(url):
     r = requests.get(url)
@@ -412,10 +415,7 @@ def getdata(type, dt):
             hour = dt[11:13]
             min = dt[14:16]
 
-            if (min < '5'):  # TODO нормальное округление времени
-                min = min[0] + '0'
-            else:
-                min = min[0] + '5'
+            iters = 0
 
             wholedate = date + '-' + hour + ':' + min
             path_corr = path + wholedate + '.txt'
@@ -425,22 +425,30 @@ def getdata(type, dt):
                 midnight_next = datetime.strptime(date + ' 23:59', '%Y-%m-%d %H:%M')
                 path_found = False
                 while now > midnight_prev:
+                    iters +=1
                     now -= timedelta(minutes=1)
-                    path_corr = path + now.strftime('%Y-%m-%d-%H:%M')+'.txt'
+                    path_corr = path + now.strftime('%Y-%m-%d-%H:%M') + '.txt'
                     if ya_disk.exists(path_corr):
                         path_found = True
                         data = get_another_from_yadisk(path_corr)
                         break
+                    if iters > 2*60:
+                        break
                 if not path_found:
+                    iters = 0
                     now = datetime.strptime(wholedate, '%Y-%m-%d-%H:%M')
-                    while now < midnight_prev:
+                    while now < midnight_next:
                         now += timedelta(minutes=1)
-                        path_corr = path + now.strftime('%Y-%m-%d-%H:%M')+'.txt'
+                        iters += 1
+                        path_corr = path + now.strftime('%Y-%m-%d-%H:%M') + '.txt'
                         if ya_disk.exists(path_corr):
                             path_found = True
                             data = get_another_from_yadisk(path_corr)
                             break
-                    data = None # not found
+                        if iters > 2 * 60:
+                            break
+                    if not path_found:
+                        data = None  # not found
             else:
                 data = get_another_from_yadisk(path_corr)
     return data
@@ -448,12 +456,7 @@ def getdata(type, dt):
 
 def getdata_view(request):
     type = request.GET['type']
-    dt:str = request.GET['dt']
+    dt: str = request.GET['dt']
 
     data = getdata(type, dt)
     return JsonResponse(data, safe=False)
-
-
-
-
-
