@@ -128,6 +128,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "public_html"),
     #'/home/g/gimslaw8/geotest/static',
 ]
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 import numpy as np
 import pandas as pd
@@ -167,14 +167,18 @@ def test(request):
             typ = 'old'
     
         if typ == 'new':
-            url = 'http://gimslaw8.bget.ru/getdata.php?type=aurora&dt='+data_to_query
-            logo = urllib.request.urlopen(url).read();
-            fff = logo;
-            arr = [];
-            for line in fff.decode().splitlines():
-                s=line.strip()
-                arr.append(s)
-            j = json.loads(''.join(arr));
+            #return redirect('/getdata?type=aurora&dt='+data_to_query)
+            # url = '/getdata?type=aurora&dt='+data_to_query
+            # logo = urllib.request.urlopen(url).read();
+            # fff = logo;
+            # arr = [];
+            # for line in fff.decode().splitlines():
+            #     s=line.strip()
+            #     arr.append(s)
+            # j = json.loads(''.join(arr));
+            j = getdata('aurora', data_to_query)
+            if j is None:
+                return JsonResponse({})
             arr1 = []
             data = j['coordinates']
             for k in range(1,len(data)):
@@ -207,8 +211,9 @@ def test(request):
             return HttpResponse(geojson)   
         
         if typ=='old':
-            url = 'http://gimslaw8.bget.ru/getdata.php?type=aurora&dt='+data_to_query
-            logo = urllib.request.urlopen(url).read();
+            logo = getdata('aurora', data_to_query)
+            # url = '/getdata?type=aurora&dt='+data_to_query
+            # logo = urllib.request.urlopen(url).read();
             fff = logo;  
             arr = [];
             for line in fff.splitlines():
@@ -347,51 +352,48 @@ def get_another_from_yadisk(file_path):
                 lines.append(line)
             line = f.readline().strip()
 
-    return '/n'.join(lines)
+    return json.loads('/n'.join(lines))
 
 def get_data_from_noaa(url):
     r = requests.get(url)
     return r.text
 
 
-
-def getdata(request):
-    type = request.GET['type']
-    dt:str = request.GET['dt']
-
+def getdata(type, dt):
     tkn = 'AgAAAAAmPFRWAADLW8HrD162JU_KmQ71dAnQ6fA'
     date = dt[0:10]
-    year=dt[0:4]
+    year = dt[0:4]
     ya_disk = yadisk.YaDisk(token=tkn)
     data = None
-    if type=='power':
+    if type == 'power':
 
-        name_power = 'a_pow_'+date
-        file='/Aurora-forecast/Power/' + year + '/' +name_power + '\n.txt'
+        name_power = 'a_pow_' + date
+        file = 'disk:/Aurora-forecast/Power/' + year + '/' + name_power + '\n.txt'
         if ya_disk.exists(file):
             data = get_yadisk_power(file)
-        return JsonResponse('none', safe=False)
-        #resource = ya_disk.
-    else: #TODO elif, else - raise 400
-        path = '/Aurora-forecast/Map/'+ year+'/'+date+  '/'+ 'a_map_'
+        else:
+            data = 'none'
+        # resource = ya_disk.
+    else:  # TODO elif, else - raise 400
+        path = 'disk:/Aurora-forecast/Map/' + year + '/' + date + '/' + 'a_map_'
         if date < '2020-10-29':
-            test_path='/Aurora-forecast/Map/' + year + '/' + date + '/'
+            test_path = '/Aurora-forecast/Map/' + year + '/' + date + '/'
             if ya_disk.exists(test_path):
                 hour = date[11:13]
-                min=date[14:16]
+                min = date[14:16]
 
-                if(min<'5'):#TODO нормальное округление времени
-                    min = min[0]+'0'
+                if (min < '5'):  # TODO нормальное округление времени
+                    min = min[0] + '0'
                 else:
-                    min=min[0]+'5'
+                    min = min[0] + '5'
 
-                time = hour+':'+min
+                time = hour + ':' + min
 
-                wholedate=date+'-'+time
+                wholedate = date + '-' + time
 
-                path_corr = path+wholedate+'.txt'
+                path_corr = path + wholedate + '.txt'
 
-                if not ya_disk.exists(path_corr): # 1 попытка сделать коррекцию
+                if not ya_disk.exists(path_corr):  # 1 попытка сделать коррекцию
                     date = datetime.strptime(wholedate, '%Y-%m-%d-%H:%M')
                     date -= timedelta(minutes=5)
                     wholedate = date.strftime('%Y-%m-%d-%H:%M')
@@ -407,32 +409,48 @@ def getdata(request):
                 path = 'https://services.swpc.noaa.gov/text/aurora-nowcast-map.txt'
                 data = get_data_from_noaa(path)
         else:
-            hour = date[11:13]
-            min = date[14:16]
+            hour = dt[11:13]
+            min = dt[14:16]
 
-            wholedate = date+'-'+hour+':'+min
-            path_corr = path+wholedate+'.txt'
+            if (min < '5'):  # TODO нормальное округление времени
+                min = min[0] + '0'
+            else:
+                min = min[0] + '5'
+
+            wholedate = date + '-' + hour + ':' + min
+            path_corr = path + wholedate + '.txt'
             if not ya_disk.exists(path_corr):
                 now = datetime.strptime(wholedate, '%Y-%m-%d-%H:%M')
-                midnight_prev=datetime.strptime(date+' 00:00', '%Y-%m-%d %H:%M')
+                midnight_prev = datetime.strptime(date + ' 00:00', '%Y-%m-%d %H:%M')
                 midnight_next = datetime.strptime(date + ' 23:59', '%Y-%m-%d %H:%M')
-                path_found=False
-                while now> midnight_prev:
+                path_found = False
+                while now > midnight_prev:
                     now -= timedelta(minutes=1)
-                    path_corr = path+now.strftime('%Y-%m-%d-%H:%m')
+                    path_corr = path + now.strftime('%Y-%m-%d-%H:%M')+'.txt'
                     if ya_disk.exists(path_corr):
-                        path_found=True
-                        data = get_another_from_yadisk(path)
+                        path_found = True
+                        data = get_another_from_yadisk(path_corr)
                         break
                 if not path_found:
                     now = datetime.strptime(wholedate, '%Y-%m-%d-%H:%M')
-                    while now< midnight_prev:
-                        now+=timedelta(minutes=1)
-                        path_corr = path + now.strftime('%Y-%m-%d-%H:%m')
+                    while now < midnight_prev:
+                        now += timedelta(minutes=1)
+                        path_corr = path + now.strftime('%Y-%m-%d-%H:%M')+'.txt'
                         if ya_disk.exists(path_corr):
                             path_found = True
-                            data = get_another_from_yadisk(path)
+                            data = get_another_from_yadisk(path_corr)
                             break
+                    data = None # not found
+            else:
+                data = get_another_from_yadisk(path_corr)
+    return data
+
+
+def getdata_view(request):
+    type = request.GET['type']
+    dt:str = request.GET['dt']
+
+    data = getdata(type, dt)
     return JsonResponse(data, safe=False)
 
 

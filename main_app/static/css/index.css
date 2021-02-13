@@ -1,4 +1,337 @@
-p {
-  color: red;
-  text-align: center;
+
+html,
+body,
+viewDiv {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.esri-view-width-xlarge .esri-popup__main-container,
+.esri-view-width-large .esri-popup__main-container,
+.esri-view-width-medium .esri-popup__main-container {
+    width: 103px !important;
+    height: 65px !important;
+}
+
+.esri-feature-content {
+    padding-top: 7px;
+}
+
+.esri-popup__header {
+    background-color: #595f60;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+div.esriPopupWrapper .zoomTo {
+    display: none;
+}
+
+.esri-icon-close,
+.esri-popup__navigation,
+.esri-popup__header-buttons,
+.esri-widget__heading,
+.esri-legend__layer-body {
+    display: none !important;
+}
+
+.esri-widget,
+.esri-popup__header-title {
+    font-size: 10px !important;
+    padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;
+
+}
+
+.esri-legend__service,
+.esri-ui-corner {
+    padding: 0 0 0 0 !important;
+    margin: 4 0 0 0 !important;
+    width: 50px !important;
+/ / height: 800 px !important;
+}
+
+.esri-legend__ramp-label {
+    font-size: 10px !important;
+    padding: 0 0 0 0 !important;
+    margin: 0 0 0 0 !important;
+/ / height: 800 px !important;
+}
+
+.esri-legend__ramp-label:before {
+    display: none !important;
+}
+
+.esri-legend__ramp-label:last-child {
+    bottom: 0px !important;
+}
+
+.esri-legend__ramp-labels {
+    margin-left: -4px !important
+}
+
+.esri-ui-corner .esri-expand .esri-widget--panel, .esri-ui-corner .esri-expand .esri-widget--panel-height-only, .esri-ui-corner .esri-component > .esri-widget--panel, .esri-ui-corner .esri-component.esri-widget--panel {
+    width: 60px !important;
+/ / height: 800 px !important;
+    background-color: #888888;
+    font-size: 10px !important;
+}
+
+.esri-search__form {
+    color: white !important
+}
+
+.esri-search__container {
+    border: 1px solid white !important;
+}
+
+.esri-widget__loader {
+/ / border: 1 px solid transparent !important;
+    width: 120px;
+    border: 1px solid white !important;
+}
+
+.esri-search__input-container {
+    width: 100px !important;
+    background-color: #4a4a4a !important;
+    color: #e8e8e8 !important;
+    border: 1px solid transparent !important;
+    border-radius: 4px !important;
+    background-color: #4a4a4a !important
+}
+
+canvas {
+    filter: drop-shadow(16px 16px 10px rgba(0, 0, 0, 0.5));
+}
+
+.esri-input, .esri-search__input {
+    background-color: #4a4a4a !important;
+    color: white !important
+}
+
+.esri-search__submit-button, .esri-widget--button {
+    background-color: #4a4a4a !important;
+    color: white !important
+}
+
+#label {
+    color: white;
+    font-size: 500%;
+    z-index: 1000;
+    position: fixed;
+    top: 40%;
+    left: 25%;
+    opacity: 0;
+    opacity: 1;
+    transition: opacity 3s;
+    background: -webkit-linear-gradient(right, #5813fc, #1cc2fd, #7dfd94, #f5c926, #ff2b18);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#label.hide {
+    opacity: 0;
+}
+
+#chart_text {
+    width: 350px;
+    background-color: #4a4a4a;
+    color: #F5F5F7;
+    text-align: center;
+    z-index: 1;
+    opacity: 1;
+/ / display: block;
+    transition: 2s;
+}
+
+#Bz_chart {
+    height: 202px;
+    width: 110%;
+    background: #4a4a4a;;
+    z-index: 1;
+    opacity: 1;
+    display: block;
+    transition: 2s;
+}
+
+#Solar_chart {
+    height: 202px;
+    width: 110%;
+    background-color: #4a4a4a;
+    z-index: 1;
+    opacity: 1;
+    display: block;
+    transition: 2s;
+}
+
+#HPI_chart {
+    height: 202px;
+    width: 110%;
+    background-color: #4a4a4a;
+    z-index: 1;
+    opacity: 1;
+    display: block;
+    transition: 2s;
+}
+
+#date-picker {
+    z-index: 1000;
+    position: absolute;
+    top: 100px;
+    left: 10px;
+    width: 500px;
+}
+
+.form-control {
+    color: #e8e8e8;
+    background-color: #4a4a4a;
+    border-color: #ccc;
+    border: 1px solid #ccc;
+}
+
+header {
+/ / grid-area: header;
+    background: #3a3a3a;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    padding: 0.5em;
+/ / overflow-y: visible;
+    z-index: 101;
+}
+
+.flex-container {
+    width: 820px;
+    display: -webkit-flex; /* Safari */
+    display: flex; /* Standard syntax */
+    margin: auto;
+}
+
+.flex-container .column {
+    -webkit-flex: 1; /* Safari */
+    -ms-flex: 1; /* IE 10 */
+    flex: 1; /* Standard syntax */
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.vl {
+    border-left: 6px solid green;
+    height: 500px;
+}
+
+/* Center the loader */
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 100;
+    width: 120px;
+    height: 120px;
+    margin: -76px 0 0 -76px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.esri-legend__layer-cell {
+    vertical-align: top !important;
+}
+
+.esri-legend__layer canvas {
+    height: 530px !important;
+
+/ / background-color: blue;
+}
+
+.esri-ui-top-right.esri-ui-corner {
+    height: 600px !important;
+}
+
+div#leg.esri-component.esri-legend.esri-widget.esri-widget--panel {
+
+    height: 860px !important;
+
+}
+
+.esri-view-height-small .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel-height-only, .esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel, .esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel-height-only {
+    max-height: 650px !important;
+}
+
+.esri-legend__ramp-labels {
+/ / background-color: red;
+    height: 530px !important;
+}
+
+.action-button {
+    color: #e6e6e6;
+    background-color: #1d4a71;
+    border-color: #4d79a0;
+}
+
+#optionsDiv {
+    position: absolute;
+    bottom: 17px;
+    width: 100%;
+    padding: 20px 0;
+    z-index: 1;
+    text-align: center;
+    left: 10%;
+}
+
+.nav_butt {
+    color: #e6e6e6;
+    background-color: transparent;
+    border-color: #4d79a0;
+    font-size: small;
+}
+
+.modal-footer {
+    justify-content: space-between !important
 }
