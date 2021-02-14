@@ -25,7 +25,7 @@ import yadisk
 import time
 
 from datetime import datetime, timezone, timedelta
-
+from django.conf import settings
 
 def tester(request):
     return render(request, 'tester.html')
@@ -253,7 +253,7 @@ def test(request):
 
 
 def sand(request):
-    tkn = 'AgAAAAAmPFRWAADLW8HrD162JU_KmQ71dAnQ6fA'
+    tkn = settings.YA_DISK_TOKEN
     y = yadisk.YaDisk(token=tkn)
     start_year = 2020
     today = datetime.today()
@@ -328,7 +328,7 @@ def weimer(request):
 
 
 def get_yadisk_power(file_path):
-    tkn = 'AgAAAAAmPFRWAADLW8HrD162JU_KmQ71dAnQ6fA'
+    tkn = settings.YA_DISK_TOKEN
     ya_disk = yadisk.YaDisk(token=tkn)
     ya_disk.download(file_path, 'tmp.txt')
     lines = []
@@ -343,7 +343,7 @@ def get_yadisk_power(file_path):
 
 
 def get_another_from_yadisk(file_path):
-    tkn = 'AgAAAAAmPFRWAADLW8HrD162JU_KmQ71dAnQ6fA'
+    tkn = settings.YA_DISK_TOKEN
     ya_disk = yadisk.YaDisk(token=tkn)
     ya_disk.download(file_path, 'tmp.txt')
     lines = []
@@ -363,7 +363,7 @@ def get_data_from_noaa(url):
 
 
 def getdata(type, dt):
-    tkn = 'AgAAAAAmPFRWAADLW8HrD162JU_KmQ71dAnQ6fA'
+    tkn = settings.YA_DISK_TOKEN
     date = dt[0:10]
     year = dt[0:4]
     ya_disk = yadisk.YaDisk(token=tkn)
