@@ -4,3 +4,8 @@
 /passenger_wsgi.py
 /public/
 /public_html/
+.cache/
+*/__pycache__/*
+tmp/
+public
+*.log.*
