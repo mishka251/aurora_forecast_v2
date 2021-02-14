@@ -9,3 +9,4 @@
 tmp/
 public
 *.log.*
+/test_project/settings_secrets.py
