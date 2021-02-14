@@ -2,3 +2,5 @@
 /db.sqlite3
 /tmp.txt
 /passenger_wsgi.py
+/public/
+/public_html/
