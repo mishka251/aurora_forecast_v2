@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'gimslaw8.bget.ru',
+    'aurora-forecast.ru',
     '127.0.0.1',
     'https://services.swpc.noaa.gov/text/aurora-nowcast-map.txt',
 ]
