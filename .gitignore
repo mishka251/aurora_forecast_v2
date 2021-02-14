@@ -5,8 +5,10 @@
 /public/
 /public_html/
 .cache/
-*/__pycache__/*
+*__pycache__/*
 tmp/
 public
+*.log
 *.log.*
 /test_project/settings_secrets.py
+.htaccess
